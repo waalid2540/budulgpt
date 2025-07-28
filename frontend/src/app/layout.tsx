@@ -2,9 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Amiri } from 'next/font/google'
 import './globals.css'
 
-// Enterprise imports
-import { ThemeProvider } from 'next-themes'
-
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const amiri = Amiri({ 
   subsets: ['arabic', 'latin'], 
@@ -103,13 +100,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} bg-islamic-gradient min-h-screen`}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
-        </ThemeProvider>
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-1">
+            {children}
+          </main>
+        </div>
         
         {/* Analytics and Marketing Scripts */}
         <script
