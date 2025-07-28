@@ -99,7 +99,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 text-slate-900 ${inter.className}`}>
+      <body className={inter.className}>
         <div className="flex flex-col min-h-screen">
           <main className="flex-1">
             {children}
