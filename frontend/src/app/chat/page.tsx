@@ -303,12 +303,13 @@ Could you please provide more details about what specific aspect you'd like to l
                   )}
                   
                   <div className={`max-w-3xl ${message.role === 'user' ? 'order-2' : ''}`}>
-                    <div className={`${
+                    <Card className={`${
                       message.role === 'user' 
                         ? 'chat-message-user' 
                         : 'chat-message-ai'
                     }`}>
-                      <div className="prose prose-sm max-w-none text-inherit">
+                      <CardContent className="p-4">
+                        <div className="prose prose-sm max-w-none text-inherit">
                         <ReactMarkdown 
                           components={{
                             p: ({children}) => <p className="mb-3 last:mb-0">{children}</p>,
