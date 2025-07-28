@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Plus, MessageCircle, Book, Lightbulb, User, Bot, Copy, ThumbsUp, ThumbsDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
+import { Input } from '../../components/ui/input'
+import { ScrollArea } from '../../components/ui/scroll-area'
+import { Badge } from '../../components/ui/badge'
 import ReactMarkdown from 'react-markdown'
-import { islamicAIService } from '@/services/islamicAI'
+import { islamicAIService } from '../../services/islamicAI'
 
 interface Message {
   id: string
