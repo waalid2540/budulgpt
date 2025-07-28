@@ -1,8 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Heart, Users, Globe, Award, BookOpen, Star, Mosque, Lightbulb } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export default function AboutPage() {
@@ -12,12 +9,7 @@ export default function AboutPage() {
       <section className="py-20 lg:py-32">
         <div className="container-islamic">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-islamic"
-            >
+            <div className="space-islamic">
               <div className="mb-8">
                 <span className="inline-block px-4 py-2 bg-islamic-green-100 text-islamic-green-800 rounded-full text-sm font-semibold">
                   🕌 Built on the Foundation of Islamic Wisdom
@@ -54,7 +46,7 @@ export default function AboutPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -63,17 +55,13 @@ export default function AboutPage() {
       <section className="py-20 bg-white/80 backdrop-blur-sm">
         <div className="container-islamic">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <div>
               <h2 className="text-headline mb-6 text-islamic-gradient">Our Sacred Mission</h2>
               <div className="space-y-6">
                 <div className="card-islamic p-6">
                   <div className="flex items-start space-x-4">
                     <div className="feature-icon-islamic">
-                      <Mosque className="h-6 w-6" />
+                      <span className="text-2xl">🕌</span>
                     </div>
                     <div>
                       <h3 className="text-title mb-3 text-islamic-green-900">Preserving Authentic Islamic Knowledge</h3>
@@ -88,7 +76,7 @@ export default function AboutPage() {
                 <div className="card-islamic p-6">
                   <div className="flex items-start space-x-4">
                     <div className="feature-icon-islamic">
-                      <Globe className="h-6 w-6" />
+                      <span className="text-2xl">🌍</span>
                     </div>
                     <div>
                       <h3 className="text-title mb-3 text-islamic-green-900">Serving 1.8 Billion Muslims</h3>
@@ -103,7 +91,7 @@ export default function AboutPage() {
                 <div className="card-islamic p-6">
                   <div className="flex items-start space-x-4">
                     <div className="feature-icon-islamic">
-                      <Lightbulb className="h-6 w-6" />
+                      <span className="text-2xl">💡</span>
                     </div>
                     <div>
                       <h3 className="text-title mb-3 text-islamic-green-900">Innovation with Islamic Values</h3>
@@ -115,31 +103,26 @@ export default function AboutPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
             
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative"
-            >
+            <div className="relative">
               <div className="bg-gradient-to-br from-islamic-green-600 to-islamic-gold-600 rounded-3xl p-8 text-white shadow-islamic-xl">
                 <h3 className="text-title mb-6">The Vision</h3>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <Star className="h-5 w-5 text-islamic-gold-200" />
+                    <span className="text-islamic-gold-200">⭐</span>
                     <span>Become the definitive Islamic AI platform</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Star className="h-5 w-5 text-islamic-gold-200" />
+                    <span className="text-islamic-gold-200">⭐</span>
                     <span>Reach $1M+ monthly revenue serving the Ummah</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Star className="h-5 w-5 text-islamic-gold-200" />
+                    <span className="text-islamic-gold-200">⭐</span>
                     <span>Maintain 100% Islamic authenticity at scale</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Star className="h-5 w-5 text-islamic-gold-200" />
+                    <span className="text-islamic-gold-200">⭐</span>
                     <span>Bridge traditional Islamic scholarship with AI</span>
                   </div>
                 </div>
@@ -151,7 +134,7 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -159,28 +142,18 @@ export default function AboutPage() {
       {/* Technology & Scholarship */}
       <section className="py-20">
         <div className="container-islamic">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-headline mb-6 text-islamic-gradient">Where Scholarship Meets Technology</h2>
             <p className="text-body-large text-islamic-green-700 max-w-4xl mx-auto">
               Budul AI is built by a unique combination of Islamic scholarship and technology expertise, 
               ensuring both authenticity and innovation.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid lg:grid-cols-3 gap-8 mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-center"
-            >
+            <div className="text-center">
               <div className="feature-icon-islamic mx-auto mb-6">
-                <BookOpen className="h-8 w-8" />
+                <span className="text-3xl">📚</span>
               </div>
               <h3 className="text-title mb-4 text-islamic-green-900">Islamic Scholarship</h3>
               <ul className="text-body text-islamic-green-700 space-y-2">
@@ -190,16 +163,11 @@ export default function AboutPage() {
                 <li>• Respect for madhab differences</li>
                 <li>• Cultural sensitivity across Muslim world</li>
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-center"
-            >
+            <div className="text-center">
               <div className="feature-icon-islamic mx-auto mb-6">
-                <Award className="h-8 w-8" />
+                <span className="text-3xl">🏆</span>
               </div>
               <h3 className="text-title mb-4 text-islamic-green-900">Technology Expertise</h3>
               <ul className="text-body text-islamic-green-700 space-y-2">
@@ -209,16 +177,11 @@ export default function AboutPage() {
                 <li>• Scalable system architecture</li>
                 <li>• Product management excellence</li>
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-center"
-            >
+            <div className="text-center">
               <div className="feature-icon-islamic mx-auto mb-6">
-                <Heart className="h-8 w-8" />
+                <span className="text-3xl">❤️</span>
               </div>
               <h3 className="text-title mb-4 text-islamic-green-900">Community Focus</h3>
               <ul className="text-body text-islamic-green-700 space-y-2">
@@ -228,7 +191,7 @@ export default function AboutPage() {
                 <li>• Commitment to authentic scholarship</li>
                 <li>• Long-term community service vision</li>
               </ul>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -236,12 +199,7 @@ export default function AboutPage() {
       {/* Statistics */}
       <section className="py-20 bg-gradient-to-r from-islamic-green-600 to-islamic-gold-600">
         <div className="container-islamic">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="grid md:grid-cols-4 gap-8 text-center text-white"
-          >
+          <div className="grid md:grid-cols-4 gap-8 text-center text-white">
             <div>
               <div className="text-5xl font-bold mb-2">1.8B+</div>
               <div className="text-islamic-green-100">Muslims Worldwide</div>
@@ -262,7 +220,7 @@ export default function AboutPage() {
               <div className="text-islamic-green-100">Revenue Goal</div>
               <div className="text-sm opacity-75 mt-1">Monthly Target</div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -270,11 +228,7 @@ export default function AboutPage() {
       <section className="py-20">
         <div className="container-islamic">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
+            <div>
               <h2 className="text-headline mb-6">
                 Join the <span className="text-islamic-gradient">Islamic AI Revolution</span>
               </h2>
@@ -303,7 +257,7 @@ export default function AboutPage() {
                   — Founder, Budul AI
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
