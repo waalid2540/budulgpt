@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Budul AI Backend - Islamic AI API
+  budul-ai-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: budul-ai-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/budul_ai
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ISLAMIC_AI_MODEL_PATH=/app/models/sunni_islamic_ai
+      - AUTHENTICITY_THRESHOLD=0.85
+      - CORS_ORIGINS=https://budulai.com,https://www.budulai.com
+    volumes:
+      - ./ai_training/models:/app/models
+      - ./dataset_collection/sunni_outputs:/app/data
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Budul AI Frontend - Next.js Interface  
+  budul-ai-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: budul-ai-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_BASE_URL=http://budul-ai-backend:8000
+      - NEXT_PUBLIC_APP_NAME=Budul AI
+      - NEXT_PUBLIC_APP_DESCRIPTION=The OpenAI for the Islamic World
+    depends_on:
+      - budul-ai-backend
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: budul-ai-postgres
+    environment:
+      - POSTGRES_DB=budul_ai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: budul-ai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Elasticsearch for Islamic text search
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: budul-ai-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  elasticsearch_data:
+
+networks:
+  default:
+    name: budul-ai-network

@@ -1,0 +1,365 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Budul AI - Islamic Design System */
+
+@layer base {
+  :root {
+    /* Islamic Color Palette */
+    --color-islamic-green-50: #f0f9f5;
+    --color-islamic-green-100: #dcf2e7;
+    --color-islamic-green-200: #bbe5d1;
+    --color-islamic-green-300: #8bd4b2;
+    --color-islamic-green-400: #52bf8e;
+    --color-islamic-green-500: #2da76f;
+    --color-islamic-green-600: #1e8a5a;
+    --color-islamic-green-700: #196f4a;
+    --color-islamic-green-800: #17593d;
+    --color-islamic-green-900: #0d4f3c;
+    
+    /* Islamic Gold Palette */
+    --color-islamic-gold-50: #fdfcf0;
+    --color-islamic-gold-100: #faf7dc;
+    --color-islamic-gold-200: #f5eeb8;
+    --color-islamic-gold-300: #ede089;
+    --color-islamic-gold-400: #e3cd58;
+    --color-islamic-gold-500: #d4b943;
+    --color-islamic-gold-600: #c9b037;
+    --color-islamic-gold-700: #a8912f;
+    --color-islamic-gold-800: #8a762a;
+    --color-islamic-gold-900: #756427;
+    
+    /* Typography */
+    --font-primary: var(--font-inter);
+    --font-arabic: var(--font-amiri);
+    
+    /* Shadows */
+    --shadow-islamic: 0 4px 6px -1px rgba(13, 79, 60, 0.1), 0 2px 4px -1px rgba(13, 79, 60, 0.06);
+    --shadow-islamic-lg: 0 10px 15px -3px rgba(13, 79, 60, 0.1), 0 4px 6px -2px rgba(13, 79, 60, 0.05);
+    --shadow-islamic-xl: 0 20px 25px -5px rgba(13, 79, 60, 0.1), 0 10px 10px -5px rgba(13, 79, 60, 0.04);
+    
+    /* Islamic Geometric Patterns */
+    --pattern-star-8: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230d4f3c' fill-opacity='0.03'%3E%3Cpath d='M30 30l15-15v10l5-5v10l-10-10v5l-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    --pattern-geometric: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9b037' fill-opacity='0.02' fill-rule='evenodd'%3E%3Cpath d='M20 20l20-20v10l-10 10v10l-10-10z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  /* Base HTML styling */
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  body {
+    font-family: var(--font-primary), system-ui, -apple-system, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Arabic text styling */
+  .arabic {
+    font-family: var(--font-arabic), serif;
+    direction: rtl;
+    text-align: right;
+    line-height: 1.8;
+    font-size: 1.125rem;
+  }
+  
+  /* Heading styles with Islamic elegance */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: rgb(13, 79, 60);
+  }
+  
+  /* Selection styling */
+  ::selection {
+    background-color: rgba(201, 176, 55, 0.2);
+    color: rgb(13, 79, 60);
+  }
+}
+
+@layer components {
+  /* Islamic Button Styles */
+  .btn-islamic-primary {
+    @apply bg-gradient-to-r from-islamic-green-600 to-islamic-green-700 text-white px-6 py-3 rounded-xl font-semibold shadow-islamic hover:from-islamic-green-700 hover:to-islamic-green-800 transition-all duration-200 transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-islamic-secondary {
+    @apply bg-gradient-to-r from-islamic-gold-500 to-islamic-gold-600 text-islamic-green-900 px-6 py-3 rounded-xl font-semibold shadow-islamic hover:from-islamic-gold-600 hover:to-islamic-gold-700 transition-all duration-200 transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-islamic-outline {
+    @apply border-2 border-islamic-green-600 text-islamic-green-600 px-6 py-3 rounded-xl font-semibold hover:bg-islamic-green-600 hover:text-white transition-all duration-200;
+  }
+  
+  /* Islamic Card Styles */
+  .card-islamic {
+    @apply bg-white rounded-2xl shadow-islamic-lg border border-islamic-green-100 overflow-hidden backdrop-blur-sm;
+  }
+  
+  .card-islamic-hover {
+    @apply card-islamic hover:shadow-islamic-xl hover:border-islamic-green-200 transition-all duration-300 transform hover:-translate-y-1;
+  }
+  
+  /* Islamic Gradient Backgrounds */
+  .bg-islamic-gradient {
+    @apply bg-gradient-to-br from-islamic-green-50 via-white to-islamic-gold-50;
+  }
+  
+  .bg-islamic-gradient-dark {
+    @apply bg-gradient-to-br from-islamic-green-800 to-islamic-green-900;
+  }
+  
+  .bg-islamic-pattern {
+    background-image: var(--pattern-geometric);
+  }
+  
+  /* Islamic Text Styles */
+  .text-islamic-gradient {
+    @apply bg-gradient-to-r from-islamic-green-600 to-islamic-gold-600 bg-clip-text text-transparent;
+  }
+  
+  .text-islamic-shadow {
+    text-shadow: 2px 2px 4px rgba(13, 79, 60, 0.1);
+  }
+  
+  /* Islamic Form Styles */
+  .input-islamic {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-islamic-green-200 focus:border-islamic-green-500 focus:ring-2 focus:ring-islamic-green-200 focus:outline-none transition-colors duration-200 bg-white/80 backdrop-blur-sm;
+  }
+  
+  .input-islamic-error {
+    @apply input-islamic border-red-300 focus:border-red-500 focus:ring-red-200;
+  }
+  
+  /* Islamic Navigation Styles */
+  .nav-islamic {
+    @apply bg-white/95 backdrop-blur-md border-b border-islamic-green-100 shadow-islamic;
+  }
+  
+  .nav-link-islamic {
+    @apply text-islamic-green-700 hover:text-islamic-green-900 px-4 py-2 rounded-lg font-medium transition-colors duration-200 hover:bg-islamic-green-50;
+  }
+  
+  .nav-link-islamic-active {
+    @apply nav-link-islamic bg-islamic-green-100 text-islamic-green-900;
+  }
+  
+  /* Islamic Loading Animation */
+  .loading-islamic {
+    @apply animate-pulse;
+  }
+  
+  .spinner-islamic {
+    border: 3px solid rgba(13, 79, 60, 0.1);
+    border-top: 3px solid rgb(13, 79, 60);
+    border-radius: 50%;
+    animation: spin-islamic 1s linear infinite;
+  }
+  
+  /* Islamic Chat Styles */
+  .chat-message-user {
+    @apply bg-islamic-green-600 text-white rounded-2xl rounded-br-md px-4 py-3 max-w-xs ml-auto shadow-islamic;
+  }
+  
+  .chat-message-ai {
+    @apply bg-white border border-islamic-green-100 text-islamic-green-900 rounded-2xl rounded-bl-md px-4 py-3 max-w-md shadow-islamic;
+  }
+  
+  .chat-citation {
+    @apply bg-islamic-gold-50 border-l-4 border-islamic-gold-400 px-3 py-2 mt-2 rounded-r-lg text-sm;
+  }
+  
+  /* Islamic Feature Cards */
+  .feature-card-islamic {
+    @apply card-islamic-hover p-8 text-center;
+  }
+  
+  .feature-icon-islamic {
+    @apply w-16 h-16 mx-auto mb-4 text-islamic-green-600 bg-islamic-green-100 rounded-2xl flex items-center justify-center text-2xl;
+  }
+  
+  /* Islamic Hero Section */
+  .hero-islamic {
+    @apply bg-islamic-gradient bg-islamic-pattern min-h-screen flex items-center relative overflow-hidden;
+  }
+  
+  .hero-islamic::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-islamic-green-900/5 to-islamic-gold-900/5;
+  }
+  
+  /* Islamic Typography Scale */
+  .text-display {
+    @apply text-6xl lg:text-7xl font-bold leading-none tracking-tight text-islamic-shadow;
+  }
+  
+  .text-headline {
+    @apply text-4xl lg:text-5xl font-bold leading-tight tracking-tight;
+  }
+  
+  .text-title {
+    @apply text-2xl lg:text-3xl font-semibold leading-tight;
+  }
+  
+  .text-body-large {
+    @apply text-lg leading-relaxed;
+  }
+  
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+  
+  .text-body-small {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .text-caption {
+    @apply text-xs leading-relaxed opacity-75;
+  }
+}
+
+@layer utilities {
+  /* Islamic Animation Classes */
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out forwards;
+  }
+  
+  /* Islamic Spacing */
+  .space-islamic {
+    @apply space-y-6;
+  }
+  
+  .gap-islamic {
+    @apply gap-6;
+  }
+  
+  /* Islamic Responsive Containers */
+  .container-islamic {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-islamic-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Islamic Color Utilities */
+  .text-islamic-primary {
+    @apply text-islamic-green-600;
+  }
+  
+  .text-islamic-secondary {
+    @apply text-islamic-gold-600;
+  }
+  
+  .bg-islamic-primary {
+    @apply bg-islamic-green-600;
+  }
+  
+  .bg-islamic-secondary {
+    @apply bg-islamic-gold-600;
+  }
+  
+  .border-islamic-primary {
+    @apply border-islamic-green-600;
+  }
+  
+  .border-islamic-secondary {
+    @apply border-islamic-gold-600;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes spin-islamic {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-islamic-green-600: #000000;
+    --color-islamic-gold-600: #000000;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .dark {
+    /* Dark mode Islamic color adjustments */
+    --color-islamic-green-50: #1e2a23;
+    --color-islamic-green-100: #2d3f35;
+    --color-islamic-green-900: #a3c4b1;
+    
+    --color-islamic-gold-50: #2a251c;
+    --color-islamic-gold-100: #3f3729;
+    --color-islamic-gold-900: #e6d089;
+  }
+}

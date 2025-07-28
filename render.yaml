@@ -1,0 +1,66 @@
+# Render.com Deployment Configuration
+# Budul AI - Islamic AI Platform
+
+services:
+  # Backend API Service
+  - type: web
+    name: budul-ai-backend
+    env: python
+    region: ohio # US East for low latency
+    plan: pro_plus # $85/month - High performance
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.api.islamic_ai_endpoints:app --host 0.0.0.0 --port $PORT
+    repo: https://github.com/YourUsername/budul-ai
+    branch: main
+    rootDir: backend
+    healthCheckPath: /
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: budul-ai-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: budul-ai-cache
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://budulai.com,https://app.budulai.com,https://islamicgpt.com
+      - key: ISLAMIC_AI_MODEL_PATH
+        value: /opt/render/project/src/models/sunni_islamic_ai
+      - key: AUTHENTICITY_THRESHOLD
+        value: "0.85"
+    
+  # Frontend Static Site
+  - type: web
+    name: budul-ai-frontend
+    env: static
+    region: ohio
+    buildCommand: npm install && npm run build && npm run export
+    staticPublishPath: out
+    repo: https://github.com/YourUsername/budul-ai
+    branch: main
+    rootDir: frontend
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE_URL
+        value: https://budul-ai-backend.onrender.com
+      - key: NEXT_PUBLIC_APP_NAME
+        value: Budul AI
+      - key: NODE_ENV
+        value: production
+
+# Database Services
+databases:
+  - name: budul-ai-db
+    databaseName: budul_ai
+    user: budul_admin
+    region: ohio
+    plan: pro_max # $200/month - For billions of texts
+    
+  - name: budul-ai-cache
+    type: redis
+    region: ohio  
+    plan: pro # $45/month - 8GB memory
+    maxmemoryPolicy: allkeys-lru
