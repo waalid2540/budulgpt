@@ -7,8 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export",
-    "deploy": "next build && next export",
+    "export": "next build",
+    "deploy": "next build",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
