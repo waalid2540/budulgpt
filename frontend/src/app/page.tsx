@@ -1,45 +1,116 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ArrowRight, MessageCircle, Code, Video, Image, Globe, Users, Shield, Zap, Star, Play } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { ArrowRight, MessageCircle, Zap, Shield, Globe, Users, Star, Play, Menu, X, Sparkles, Brain, Video, Image as ImageIcon } from 'lucide-react'
 
 export default function HomePage() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [activeFeature, setActiveFeature] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % 4)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const features = [
+    {
+      icon: <MessageCircle className="w-8 h-8" />,
+      title: "Budul GPT",
+      description: "Islamic Conversational AI with scholar-verified knowledge",
+      gradient: "from-emerald-500 to-teal-600",
+      link: "/chat"
+    },
+    {
+      icon: <Zap className="w-8 h-8" />,
+      title: "Budul API",
+      description: "Islamic AI for Developers with enterprise-grade API",
+      gradient: "from-blue-500 to-indigo-600",
+      link: "/api"
+    },
+    {
+      icon: <Video className="w-8 h-8" />,
+      title: "Budul Studio",
+      description: "Islamic Video Generation with AI-powered content",
+      gradient: "from-purple-500 to-pink-600",
+      link: "/studio"
+    },
+    {
+      icon: <ImageIcon className="w-8 h-8" />,
+      title: "Budul Vision",
+      description: "Islamic Image Creation with cultural authenticity",
+      gradient: "from-orange-500 to-red-600",
+      link: "/vision"
+    }
+  ]
+
   return (
-    <div className="min-h-screen bg-islamic-gradient bg-islamic-pattern">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-amber-50 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-emerald-300/10 to-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
       {/* Navigation */}
-      <nav className="nav-islamic sticky top-0 z-50">
-        <div className="container-islamic">
-          <div className="flex items-center justify-between py-4">
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/80 backdrop-blur-xl border-b border-emerald-100 shadow-lg' 
+          : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-islamic-green-600 to-islamic-gold-600 rounded-xl flex items-center justify-center shadow-islamic">
-                <span className="text-white font-bold text-xl arabic">ب</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">ب</span>
               </div>
               <div>
-                <span className="text-2xl font-bold text-islamic-gradient">Budul AI</span>
-                <div className="text-xs text-islamic-green-600 font-medium">The OpenAI for Islam</div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  Budul AI
+                </h1>
+                <p className="text-xs text-emerald-600 font-medium">The OpenAI for Islam</p>
               </div>
             </div>
-            
-            <div className="hidden lg:flex items-center space-x-8">
-              <Link href="#products" className="nav-link-islamic">Products</Link>
-              <Link href="/docs" className="nav-link-islamic">Documentation</Link>
-              <Link href="/pricing" className="nav-link-islamic">Pricing</Link>
-              <Link href="/about" className="nav-link-islamic">About</Link>
-              <Link href="/community" className="nav-link-islamic">Community</Link>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Link href="/auth/login">
-                <button className="text-islamic-green-700 hover:text-islamic-green-900 px-4 py-2 font-medium transition-colors">
-                  Sign In
-                </button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="#products" className="text-slate-700 hover:text-emerald-600 font-medium transition-colors">
+                Products
               </Link>
-              <Link href="/auth/register">
-                <button className="btn-islamic-primary">
-                  Get Started
-                </button>
+              <Link href="/docs" className="text-slate-700 hover:text-emerald-600 font-medium transition-colors">
+                Docs
+              </Link>
+              <Link href="/pricing" className="text-slate-700 hover:text-emerald-600 font-medium transition-colors">
+                Pricing
+              </Link>
+              <Link href="/about" className="text-slate-700 hover:text-emerald-600 font-medium transition-colors">
+                About
+              </Link>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex items-center space-x-4">
+              <Link 
+                href="/auth/login"
+                className="text-slate-700 hover:text-emerald-600 font-medium transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/auth/register"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                Get Started
               </Link>
             </div>
           </div>
@@ -47,434 +118,302 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-islamic">
-        <div className="container-islamic relative z-10">
-          <div className="max-w-5xl mx-auto text-center py-20 lg:py-32">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-islamic"
-            >
-              <div className="mb-6">
-                <span className="inline-block px-4 py-2 bg-islamic-green-100 text-islamic-green-800 rounded-full text-sm font-semibold mb-8">
-                  🕌 Introducing Budul AI
-                </span>
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Badge */}
+            <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-xl rounded-full px-6 py-3 mb-8 border border-emerald-200 shadow-lg">
+              <span className="text-2xl">🕌</span>
+              <span className="text-emerald-700 font-semibold">Introducing Budul AI</span>
+              <Sparkles className="w-4 h-4 text-amber-500" />
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 bg-clip-text text-transparent">
+                Islamic Intelligence
+              </span>
+              <br />
+              <span className="text-slate-800">for the Modern World</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+              Built on the foundation of Islamic wisdom, serving <span className="font-bold text-emerald-600">1.8 billion Muslims</span> worldwide 
+              with AI-powered tools for authentic knowledge, creative content, and spiritual guidance.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+              <Link 
+                href="/chat"
+                className="group bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
+              >
+                <Brain className="w-6 h-6" />
+                <span>Try Budul GPT</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              
+              <Link 
+                href="/docs"
+                className="group bg-white/60 backdrop-blur-xl text-slate-700 px-8 py-4 rounded-2xl font-semibold text-lg border border-emerald-200 hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
+              >
+                <Zap className="w-6 h-6" />
+                <span>Explore API</span>
+              </Link>
+            </div>
+
+            {/* Social Proof */}
+            <div className="flex items-center justify-center space-x-8 text-sm text-slate-600">
+              <div className="flex items-center space-x-2">
+                <Star className="w-5 h-5 text-amber-400 fill-current" />
+                <span className="font-medium">Scholar Verified</span>
               </div>
-              
-              <h1 className="text-display mb-8">
-                <span className="text-islamic-gradient">Islamic artificial intelligence</span>
-                <br />
-                <span className="text-islamic-green-900">that serves the Muslim community</span>
-                <br />
-                <span className="text-islamic-green-700">with authentic, scholar-verified knowledge and creative tools.</span>
-              </h1>
-              
-              <p className="text-body-large text-islamic-green-700 mb-12 max-w-4xl mx-auto leading-relaxed">
-                Built on the foundation of Islamic wisdom, Budul AI is the definitive platform serving 1.8 billion Muslims worldwide 
-                with AI-powered tools for authentic Islamic knowledge, creative content, and spiritual guidance.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                <Link href="/chat">
-                  <button className="btn-islamic-primary text-lg px-8 py-4 group">
-                    Try Budul GPT
-                    <Play className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
-                <Link href="/docs/api">
-                  <button className="btn-islamic-outline text-lg px-8 py-4">
-                    Explore API
-                  </button>
-                </Link>
-                <Link href="/studio">
-                  <button className="btn-islamic-secondary text-lg px-8 py-4">
-                    Create Islamic Videos
-                  </button>
-                </Link>
+              <div className="flex items-center space-x-2">
+                <Globe className="w-5 h-5 text-emerald-500" />
+                <span className="font-medium">50+ Languages</span>
               </div>
-              
-              <div className="text-islamic-green-600 font-amiri text-lg italic">
-                "Your Grandfather's Wisdom, Tomorrow's Technology"
+              <div className="flex items-center space-x-2">
+                <Users className="w-5 h-5 text-blue-500" />
+                <span className="font-medium">1.8B Muslims</span>
               </div>
-              
-              <div className="mt-12 flex items-center justify-center space-x-8 text-sm text-islamic-green-600">
-                <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-islamic-gold-500 fill-current" />
-                  <span>Scholar Verified</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Globe className="h-4 w-4" />
-                  <span>50+ Languages</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Users className="h-4 w-4" />
-                  <span>1.8B Muslims Served</span>
-                </div>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Product Grid Section */}
-      <section id="products" className="py-20 bg-white/80 backdrop-blur-sm">
-        <div className="container-islamic">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-headline mb-6 text-islamic-gradient">
-              Islamic AI Products
+      {/* Floating Product Cards */}
+      <section id="products" className="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                Islamic AI Products
+              </span>
             </h2>
-            <p className="text-body-large text-islamic-green-700 max-w-3xl mx-auto">
-              Complete suite of Islamic AI tools for individuals, developers, and organizations worldwide
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Complete suite of Islamic AI tools designed for individuals, developers, and organizations worldwide
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* 🤖 Budul GPT - Islamic Conversational AI */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <div className="feature-card-islamic group">
-                <div className="feature-icon-islamic mb-6">
-                  <span className="text-3xl">🤖</span>
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className={`group relative bg-white/60 backdrop-blur-xl rounded-3xl p-8 border border-white/50 hover:border-emerald-200 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 ${
+                  activeFeature === index ? 'ring-2 ring-emerald-500 scale-105' : ''
+                }`}
+                onMouseEnter={() => setActiveFeature(index)}
+              >
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 rounded-3xl transition-opacity duration-500`}></div>
+                
+                {/* Icon */}
+                <div className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  {feature.icon}
                 </div>
-                <h3 className="text-title mb-4 text-islamic-green-900">Budul GPT</h3>
-                <p className="text-body text-islamic-green-700 mb-6">
-                  Islamic Conversational AI with authentic scholar-verified knowledge and real-time citations
+
+                {/* Content */}
+                <h3 className="text-2xl font-bold text-slate-800 mb-4 group-hover:text-emerald-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 mb-6 leading-relaxed">
+                  {feature.description}
                 </p>
-                <div className="space-y-2 text-body-small text-islamic-green-600 mb-6">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Hadith & Quran citations</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Multi-madhab support</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>50+ languages</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Scholar verification</span>
-                  </div>
+
+                {/* Features List */}
+                <div className="space-y-3 mb-8">
+                  {index === 0 && (
+                    <>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                        <span>Quran & Hadith citations</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                        <span>Multi-madhab support</span>
+                      </div>
+                    </>
+                  )}
+                  {index === 1 && (
+                    <>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span>RESTful API endpoints</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span>99.9% uptime SLA</span>
+                      </div>
+                    </>
+                  )}
+                  {index === 2 && (
+                    <>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                        <span>Text-to-video AI</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                        <span>Arabic calligraphy</span>
+                      </div>
+                    </>
+                  )}
+                  {index === 3 && (
+                    <>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                        <span>Islamic art generation</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                        <span>Cultural authenticity</span>
+                      </div>
+                    </>
+                  )}
                 </div>
-                <Link href="/chat">
-                  <button className="btn-islamic-primary w-full group-hover:scale-105 transition-transform">
-                    Try Budul GPT
-                  </button>
+
+                {/* CTA Button */}
+                <Link 
+                  href={feature.link}
+                  className={`w-full bg-gradient-to-r ${feature.gradient} text-white py-3 rounded-xl font-semibold text-center block hover:shadow-lg transform hover:scale-105 transition-all duration-200`}
+                >
+                  Explore {feature.title}
                 </Link>
               </div>
-            </motion.div>
-
-            {/* ⚡ Budul API - Islamic AI for Developers */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="feature-card-islamic group">
-                <div className="feature-icon-islamic mb-6">
-                  <span className="text-3xl">⚡</span>
-                </div>
-                <h3 className="text-title mb-4 text-islamic-green-900">Budul API</h3>
-                <p className="text-body text-islamic-green-700 mb-6">
-                  Islamic AI for Developers with comprehensive API access to Islamic knowledge and AI models
-                </p>
-                <div className="space-y-2 text-body-small text-islamic-green-600 mb-6">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>RESTful API endpoints</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Islamic knowledge base</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Enterprise scale</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>99.9% uptime SLA</span>
-                  </div>
-                </div>
-                <Link href="/docs/api">
-                  <button className="btn-islamic-outline w-full group-hover:scale-105 transition-transform">
-                    View Documentation
-                  </button>
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* 🎬 Budul Studio - Islamic Video Generation */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              <div className="feature-card-islamic group">
-                <div className="feature-icon-islamic mb-6">
-                  <span className="text-3xl">🎬</span>
-                </div>
-                <h3 className="text-title mb-4 text-islamic-green-900">Budul Studio</h3>
-                <p className="text-body text-islamic-green-700 mb-6">
-                  Islamic Video Generation with AI-powered content creation and calligraphy integration
-                </p>
-                <div className="space-y-2 text-body-small text-islamic-green-600 mb-6">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Text-to-video AI</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Arabic calligraphy</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Geometric patterns</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Halal audio synthesis</span>
-                  </div>
-                </div>
-                <Link href="/studio">
-                  <button className="btn-islamic-secondary w-full group-hover:scale-105 transition-transform">
-                    Create Videos
-                  </button>
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* 🎨 Budul Vision - Islamic Image Creation */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <div className="feature-card-islamic group">
-                <div className="feature-icon-islamic mb-6">
-                  <span className="text-3xl">🎨</span>
-                </div>
-                <h3 className="text-title mb-4 text-islamic-green-900">Budul Vision</h3>
-                <p className="text-body text-islamic-green-700 mb-6">
-                  Islamic Image Creation with culturally sensitive AI art and calligraphy generation
-                </p>
-                <div className="space-y-2 text-body-small text-islamic-green-600 mb-6">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Islamic art generation</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Arabic calligraphy AI</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>Cultural authenticity</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-islamic-gold-500 rounded-full"></div>
-                    <span>High resolution export</span>
-                  </div>
-                </div>
-                <Link href="/vision">
-                  <button className="btn-islamic-outline w-full group-hover:scale-105 transition-transform">
-                    Generate Images
-                  </button>
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Built for the <span className="bg-gradient-to-r from-emerald-600 to-amber-600 bg-clip-text text-transparent">Global Muslim Community</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Authentic Islamic knowledge meets cutting-edge AI technology
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Scholar Verified</h3>
-              <p className="text-gray-600">
-                Every response is backed by authentic Islamic sources and verified by qualified scholars
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Globe className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Global Reach</h3>
-              <p className="text-gray-600">
-                Supporting Arabic, English, Urdu, Turkish, and more languages for 1.8 billion Muslims
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Zap className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Lightning Fast</h3>
-              <p className="text-gray-600">
-                Sub-second responses with enterprise-grade infrastructure and 99.9% uptime
-              </p>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="px-6 py-20 bg-gradient-to-r from-emerald-600 to-amber-600">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="grid md:grid-cols-4 gap-8 text-center text-white"
-          >
-            <div>
-              <div className="text-4xl font-bold mb-2">1.8B+</div>
-              <div className="text-emerald-100">Muslims Served</div>
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl p-12 text-white relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 left-0 w-32 h-32 border border-white rounded-full"></div>
+              <div className="absolute top-20 right-20 w-24 h-24 border border-white rounded-full"></div>
+              <div className="absolute bottom-10 left-20 w-40 h-40 border border-white rounded-full"></div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">1M+</div>
-              <div className="text-emerald-100">Islamic Texts</div>
+
+            <div className="relative grid md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-5xl font-bold mb-2">1.8B+</div>
+                <div className="text-emerald-100 font-medium">Muslims Worldwide</div>
+              </div>
+              <div>
+                <div className="text-5xl font-bold mb-2">3,430+</div>
+                <div className="text-emerald-100 font-medium">Islamic Texts</div>
+              </div>
+              <div>
+                <div className="text-5xl font-bold mb-2">50+</div>
+                <div className="text-emerald-100 font-medium">Languages</div>
+              </div>
+              <div>
+                <div className="text-5xl font-bold mb-2">99.9%</div>
+                <div className="text-emerald-100 font-medium">Uptime</div>
+              </div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">50+</div>
-              <div className="text-emerald-100">Countries</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">99.9%</div>
-              <div className="text-emerald-100">Uptime</div>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="px-6 py-20">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Start Your <span className="bg-gradient-to-r from-emerald-600 to-amber-600 bg-clip-text text-transparent">Islamic AI Journey</span>
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Join thousands of Muslims worldwide using Budul AI for authentic Islamic guidance
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Start Your <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Islamic AI Journey</span>
+          </h2>
+          <p className="text-xl text-slate-600 mb-12">
+            Join thousands of Muslims worldwide using Budul AI for authentic Islamic guidance and creative tools
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              href="/auth/register"
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
+            >
+              <span>Get Started Free</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link 
+              href="/contact"
+              className="bg-white/60 backdrop-blur-xl text-slate-700 px-8 py-4 rounded-2xl font-semibold text-lg border border-emerald-200 hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            >
+              Contact Sales
+            </Link>
+          </div>
+
+          {/* Quote */}
+          <div className="mt-16 p-8 bg-white/40 backdrop-blur-xl rounded-3xl border border-emerald-200">
+            <p className="text-lg italic text-slate-700 mb-4 font-medium">
+              "Your Grandfather's Wisdom, Tomorrow's Technology"
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/register">
-                <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-amber-600 hover:from-emerald-700 hover:to-amber-700 text-lg px-8 py-4">
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-                  Contact Sales
-                </Button>
-              </Link>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+              <span className="text-sm text-emerald-600 font-semibold">Founder, Budul AI</span>
+              <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white px-6 py-16">
+      <footer className="relative bg-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            {/* Logo Section */}
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-amber-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">ب</span>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">ب</span>
                 </div>
-                <span className="text-2xl font-bold">Budul AI</span>
+                <div>
+                  <h3 className="text-2xl font-bold">Budul AI</h3>
+                  <p className="text-slate-400 text-sm">The OpenAI for Islam</p>
+                </div>
               </div>
-              <p className="text-gray-300 mb-4">
-                Islamic Intelligence for the Modern World
-              </p>
-              <p className="text-sm text-gray-400">
-                Named after our founder's grandfather, carrying forward authentic Islamic wisdom through AI.
+              <p className="text-slate-300 leading-relaxed">
+                Islamic Intelligence for the Modern World. Built with Islamic values for the global Muslim community.
               </p>
             </div>
-            
+
+            {/* Products */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Products</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link href="/chat" className="hover:text-white transition-colors">Budul GPT</Link></li>
-                <li><Link href="/docs/api" className="hover:text-white transition-colors">Budul API</Link></li>
-                <li><Link href="/studio" className="hover:text-white transition-colors">Budul Studio</Link></li>
-                <li><Link href="/vision" className="hover:text-white transition-colors">Budul Vision</Link></li>
+              <h4 className="text-lg font-semibold mb-4">Products</h4>
+              <ul className="space-y-2 text-slate-300">
+                <li><Link href="/chat" className="hover:text-emerald-400 transition-colors">Budul GPT</Link></li>
+                <li><Link href="/api" className="hover:text-emerald-400 transition-colors">Budul API</Link></li>
+                <li><Link href="/studio" className="hover:text-emerald-400 transition-colors">Budul Studio</Link></li>
+                <li><Link href="/vision" className="hover:text-emerald-400 transition-colors">Budul Vision</Link></li>
               </ul>
             </div>
-            
+
+            {/* Resources */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link href="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                <li><Link href="/community" className="hover:text-white transition-colors">Community</Link></li>
-                <li><Link href="/support" className="hover:text-white transition-colors">Support</Link></li>
+              <h4 className="text-lg font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-slate-300">
+                <li><Link href="/docs" className="hover:text-emerald-400 transition-colors">Documentation</Link></li>
+                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Blog</Link></li>
+                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">Community</Link></li>
+                <li><Link href="/support" className="hover:text-emerald-400 transition-colors">Support</Link></li>
               </ul>
             </div>
-            
+
+            {/* Company */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
+              <h4 className="text-lg font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-slate-300">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About</Link></li>
+                <li><Link href="/careers" className="hover:text-emerald-400 transition-colors">Careers</Link></li>
+                <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms</Link></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+
+          <div className="border-t border-slate-800 pt-8 text-center text-slate-400">
             <p>&copy; 2024 Budul AI. Built with Islamic values for the global Muslim community.</p>
           </div>
         </div>
