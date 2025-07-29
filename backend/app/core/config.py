@@ -36,8 +36,13 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
+        "http://localhost:3001", 
+        "http://localhost:3002",
         "https://budulai.com",
-        "https://www.budulai.com"
+        "https://www.budulai.com",
+        "https://budulgpt-frontend.onrender.com",
+        "https://budul-ai-frontend.onrender.com",
+        "https://budulai-frontend.onrender.com"
     ]
     
     # Trusted Hosts
@@ -45,7 +50,9 @@ class Settings(BaseSettings):
         "localhost",
         "127.0.0.1",
         "budulai.com",
-        "www.budulai.com"
+        "www.budulai.com",
+        "budulgpt-backend.onrender.com",
+        "budulgpt-frontend.onrender.com"
     ]
     
     # Islamic Sources Configuration
