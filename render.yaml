@@ -44,8 +44,8 @@ services:
     branch: main
     rootDir: frontend
     envVars:
-      - key: NEXT_PUBLIC_API_BASE_URL
-        value: https://budul-ai-backend.onrender.com
+      - key: NEXT_PUBLIC_API_URL
+        value: https://budulgpt-backend.onrender.com/api/v1
       - key: NEXT_PUBLIC_APP_NAME
         value: Budul AI
       - key: NODE_ENV

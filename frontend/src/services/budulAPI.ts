@@ -68,7 +68,7 @@ class BudulAPI {
   // Health check
   async healthCheck(): Promise<{ status: string; service: string }> {
     try {
-      const response = await fetch(`${this.baseUrl}/budul-ai/health`)
+      const response = await fetch(`${this.baseUrl.replace('/api/v1', '')}`)
       if (!response.ok) throw new Error('Health check failed')
       return await response.json()
     } catch (error) {
@@ -80,7 +80,7 @@ class BudulAPI {
   // Chat with Islamic AI
   async chat(request: ChatRequest): Promise<ChatResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/budul-ai/`, {
+      const response = await fetch(`${this.baseUrl}/chat/islamic`, {
         method: 'POST',
         headers: this.headers,
         body: JSON.stringify(request)
