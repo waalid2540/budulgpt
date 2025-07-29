@@ -1,7 +1,7 @@
 // Enterprise-grade Budul AI API Service
 // Connects to your Islamic AI backend with full functionality
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://budulgpt-backend.onrender.com/api/v1'
 
 export interface ChatMessage {
   id: string
@@ -54,6 +54,7 @@ class BudulAPI {
 
   constructor() {
     this.baseUrl = API_BASE_URL
+    console.log('🔗 Budul API connecting to:', this.baseUrl)
     this.headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -68,9 +69,15 @@ class BudulAPI {
   // Health check
   async healthCheck(): Promise<{ status: string; service: string }> {
     try {
-      const response = await fetch(`${this.baseUrl.replace('/api/v1', '')}`)
-      if (!response.ok) throw new Error('Health check failed')
+      const healthUrl = this.baseUrl.replace('/api/v1', '')
+      console.log('🏥 Health check URL:', healthUrl)
+      
+      const response = await fetch(healthUrl)
+      console.log('🏥 Health check response status:', response.status)
+      
+      if (!response.ok) throw new Error(`Health check failed with status: ${response.status}`)
       const data = await response.json()
+      console.log('🏥 Health check data:', data)
       
       // Adapt response to expected format
       return {
@@ -78,7 +85,7 @@ class BudulAPI {
         service: data.service || 'Budul AI'
       }
     } catch (error) {
-      console.error('Backend health check failed:', error)
+      console.error('❌ Backend health check failed:', error)
       throw error
     }
   }
