@@ -94,19 +94,26 @@ class BudulAPI {
         throw new Error(errorData.detail || 'Chat request failed')
       }
 
-      const data = await response.json()
+      let data;
+      try {
+        const responseText = await response.text();
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse backend response:', parseError);
+        throw new Error('Invalid response format from Islamic AI backend');
+      }
       
       // Adapt your backend response format to frontend expectations
       return {
         response_id: data.response_id || 'resp_' + Date.now(),
         message: request.message,
         session_id: request.session_id || 'session_' + Date.now(),
-        response_text: data.response || data.response_text || '',
-        confidence_score: data.authenticity_score || 0.9,
-        authenticity_score: data.authenticity_score || 0.9,
-        citations: data.citations || [],
-        sources: data.citations?.map((c: any) => c.reference) || [],
-        related_topics: [],
+        response_text: data.response || data.response_text || data.message || 'No response received',
+        confidence_score: typeof data.authenticity_score === 'number' ? data.authenticity_score : 0.9,
+        authenticity_score: typeof data.authenticity_score === 'number' ? data.authenticity_score : 0.9,
+        citations: Array.isArray(data.citations) ? data.citations : [],
+        sources: Array.isArray(data.citations) ? data.citations.map((c: any) => c.reference || c.source || 'Unknown') : [],
+        related_topics: Array.isArray(data.related_topics) ? data.related_topics : [],
         requires_scholar_review: false,
         content_warnings: [],
         generated_at: data.timestamp || new Date().toISOString(),
