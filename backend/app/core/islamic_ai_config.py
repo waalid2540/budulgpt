@@ -64,7 +64,7 @@ class IslamicAISettings(BaseSettings):
     anthropic_api_key: Optional[str] = None
     
     # Islamic AI Model Paths
-    islamic_gpt_model_path: str = "./models/islamic-gpt"
+    islamic_gpt_model_path: str = "./models/islamic-ai"
     hadith_model_path: str = "./models/hadith-classifier"
     quran_model_path: str = "./models/quran-embeddings"
     arabic_nlp_model_path: str = "./models/arabic-nlp"

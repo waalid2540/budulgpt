@@ -9,11 +9,11 @@ services:
     region: ohio # US East for low latency
     plan: pro_plus # $85/month - High performance
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.api.islamic_ai_endpoints:app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     repo: https://github.com/YourUsername/budul-ai
     branch: main
     rootDir: backend
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: ENVIRONMENT
         value: production
