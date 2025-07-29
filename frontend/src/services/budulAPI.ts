@@ -1,7 +1,7 @@
 // Enterprise-grade Budul AI API Service
 // Connects to your Islamic AI backend with full functionality
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://budulgpt-backend.onrender.com/api/v1'
+const API_BASE_URL = 'https://budulgpt-backend.onrender.com/api/v1' // Force production URL
 
 export interface ChatMessage {
   id: string
@@ -54,7 +54,6 @@ class BudulAPI {
 
   constructor() {
     this.baseUrl = API_BASE_URL
-    console.log('🔗 Budul API connecting to:', this.baseUrl)
     this.headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
