@@ -35,14 +35,7 @@ class Settings(BaseSettings):
     
     # CORS
     CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:3001", 
-        "http://localhost:3002",
-        "https://budulai.com",
-        "https://www.budulai.com",
-        "https://budulgpt-frontend.onrender.com",
-        "https://budul-ai-frontend.onrender.com",
-        "https://budulai-frontend.onrender.com"
+        "*"  # Allow all origins for now - will restrict later
     ]
     
     # Trusted Hosts

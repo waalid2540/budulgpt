@@ -10,7 +10,7 @@ services:
     plan: pro_plus # $85/month - High performance
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    repo: https://github.com/YourUsername/budul-ai
+    repo: https://github.com/waalid2540/budulgpt
     branch: main
     rootDir: backend
     healthCheckPath: /health
@@ -40,7 +40,7 @@ services:
     region: ohio
     buildCommand: npm install && npm run build && npm run export
     staticPublishPath: out
-    repo: https://github.com/YourUsername/budul-ai
+    repo: https://github.com/waalid2540/budulgpt
     branch: main
     rootDir: frontend
     envVars:
