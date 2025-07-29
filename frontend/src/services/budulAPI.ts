@@ -70,7 +70,13 @@ class BudulAPI {
     try {
       const response = await fetch(`${this.baseUrl.replace('/api/v1', '')}`)
       if (!response.ok) throw new Error('Health check failed')
-      return await response.json()
+      const data = await response.json()
+      
+      // Adapt response to expected format
+      return {
+        status: data.status === 'operational' ? 'healthy' : data.status,
+        service: data.service || 'Budul AI'
+      }
     } catch (error) {
       console.error('Backend health check failed:', error)
       throw error
@@ -91,7 +97,24 @@ class BudulAPI {
         throw new Error(errorData.detail || 'Chat request failed')
       }
 
-      return await response.json()
+      const data = await response.json()
+      
+      // Adapt your backend response format to frontend expectations
+      return {
+        response_id: data.response_id || 'resp_' + Date.now(),
+        message: request.message,
+        session_id: request.session_id || 'session_' + Date.now(),
+        response_text: data.response || data.response_text || '',
+        confidence_score: data.authenticity_score || 0.9,
+        authenticity_score: data.authenticity_score || 0.9,
+        citations: data.citations || [],
+        sources: data.citations?.map((c: any) => c.reference) || [],
+        related_topics: [],
+        requires_scholar_review: false,
+        content_warnings: [],
+        generated_at: data.timestamp || new Date().toISOString(),
+        processing_time_ms: 1000
+      }
     } catch (error) {
       console.error('Chat API error:', error)
       throw error
