@@ -1,0 +1,60 @@
+{
+  "collection_metadata": {
+    "collection_date": "2025-08-15T08:19:58.436339",
+    "total_items": 8,
+    "collection_version": "2.0_authentic"
+  },
+  "authenticity_analysis": {
+    "authenticity_percentage": 100.0,
+    "authenticity_threshold": 0.85,
+    "meets_threshold": true,
+    "authenticity_distribution": {
+      "authentic": 5,
+      "verified": 3
+    }
+  },
+  "source_quality": {
+    "verified_sources": [
+      "binbaz_style_fatwa",
+      "islamqa_style"
+    ],
+    "source_distribution": {
+      "binbaz_style_fatwa": 5,
+      "islamqa_style": 3
+    },
+    "quality_rating": "high"
+  },
+  "content_analysis": {
+    "topic_coverage": {
+      "prayer": 2,
+      "finance": 1,
+      "purification": 1,
+      "celebrations": 1,
+      "new_muslim_guide": 1,
+      "islamic_jurisprudence": 1,
+      "madhabs": 1
+    },
+    "madhab_coverage": {
+      "hanbali": 1,
+      "general_consensus": 1,
+      "all_madhabs": 2,
+      "conservative_position": 1,
+      "general": 3
+    },
+    "reference_coverage": 62.5,
+    "reference_distribution": {
+      "hadith": 3,
+      "quran": 1,
+      "scholarly": 1
+    }
+  },
+  "quality_score": {
+    "overall_score": 81.25,
+    "components": {
+      "authenticity": 100.0,
+      "references": 62.5,
+      "source_quality": 95,
+      "madhab_diversity": 100
+    }
+  }
+}

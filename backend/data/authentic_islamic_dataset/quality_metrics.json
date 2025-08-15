@@ -1,0 +1,16 @@
+{
+  "collection_date": "2025-08-15T08:18:31.503411",
+  "total_items": 0,
+  "quality_score": 0,
+  "authenticity_distribution": {},
+  "source_distribution": {},
+  "topic_distribution": {},
+  "verification_status": {
+    "verified_sources": [
+      "binbaz.org.sa",
+      "islamqa.info"
+    ],
+    "authenticity_threshold": 0.85,
+    "quality_standard": "high"
+  }
+}

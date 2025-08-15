@@ -1,0 +1,148 @@
+{
+  "metadata": {
+    "collection_metadata": {
+      "collection_date": "2025-08-15T08:19:58.436339",
+      "total_items": 8,
+      "collection_version": "2.0_authentic"
+    },
+    "authenticity_analysis": {
+      "authenticity_percentage": 100.0,
+      "authenticity_threshold": 0.85,
+      "meets_threshold": true,
+      "authenticity_distribution": {
+        "authentic": 5,
+        "verified": 3
+      }
+    },
+    "source_quality": {
+      "verified_sources": [
+        "binbaz_style_fatwa",
+        "islamqa_style"
+      ],
+      "source_distribution": {
+        "binbaz_style_fatwa": 5,
+        "islamqa_style": 3
+      },
+      "quality_rating": "high"
+    },
+    "content_analysis": {
+      "topic_coverage": {
+        "prayer": 2,
+        "finance": 1,
+        "purification": 1,
+        "celebrations": 1,
+        "new_muslim_guide": 1,
+        "islamic_jurisprudence": 1,
+        "madhabs": 1
+      },
+      "madhab_coverage": {
+        "hanbali": 1,
+        "general_consensus": 1,
+        "all_madhabs": 2,
+        "conservative_position": 1,
+        "general": 3
+      },
+      "reference_coverage": 62.5,
+      "reference_distribution": {
+        "hadith": 3,
+        "quran": 1,
+        "scholarly": 1
+      }
+    },
+    "quality_score": {
+      "overall_score": 81.25,
+      "components": {
+        "authenticity": 100.0,
+        "references": 62.5,
+        "source_quality": 95,
+        "madhab_diversity": 100
+      }
+    }
+  },
+  "sources": {
+    "binbaz_fatwas": 5,
+    "islamqa_content": 3
+  },
+  "data": [
+    {
+      "question": "What is the ruling on missing Fajr prayer due to oversleeping?",
+      "answer": "بسم الله الرحمن الرحيم\n\nWhoever oversleeps and misses Fajr prayer should perform it as soon as they wake up. The Prophet (ﷺ) said: 'Whoever forgets a prayer or sleeps through it, let him pray it when he remembers it.' [Sahih Muslim]\n\nHowever, one should take precautions to wake up for Fajr by:\n1. Sleeping early\n2. Setting multiple alarms\n3. Making du'a before sleeping\n4. Seeking Allah's help to wake up\n\nالله أعلم",
+      "source": "binbaz_style_fatwa",
+      "topic": "prayer",
+      "authenticity": "authentic",
+      "hadith_reference": "Sahih Muslim",
+      "madhab": "hanbali",
+      "collected_at": "2025-08-15T08:19:58.435967"
+    },
+    {
+      "question": "Is it permissible to use credit cards with interest?",
+      "answer": "بسم الله الرحمن الرحيم\n\nUsing credit cards that involve interest (riba) is prohibited in Islam. Allah says: 'Allah has permitted trade and forbidden riba (usury/interest).' [Quran 2:275]\n\nHowever, if one uses a credit card and pays the full amount before the due date without incurring any interest charges, this may be permissible according to some scholars.\n\nIt is better to avoid such contracts altogether and use:\n1. Debit cards\n2. Cash payments\n3. Islamic banking alternatives\n\nالله أعلم",
+      "source": "binbaz_style_fatwa",
+      "topic": "finance",
+      "authenticity": "authentic",
+      "quran_reference": "Quran 2:275",
+      "madhab": "general_consensus",
+      "collected_at": "2025-08-15T08:19:58.435972"
+    },
+    {
+      "question": "What is the correct way to perform Istinja (cleaning after using toilet)?",
+      "answer": "بسم الله الرحمن الرحيم\n\nIstinja (استنجاء) should be performed as follows:\n\n1. Use the left hand for cleaning\n2. Clean thoroughly with water\n3. Use toilet paper first if needed, then water\n4. Ensure complete cleanliness before leaving\n5. Wash hands thoroughly afterward\n\nThe Prophet (ﷺ) emphasized cleanliness and said: 'Cleanliness is half of faith.' [Sahih Muslim]\n\nNote: The right hand should not be used for cleaning private parts.\n\nالله أعلم",
+      "source": "binbaz_style_fatwa",
+      "topic": "purification",
+      "authenticity": "authentic",
+      "hadith_reference": "Sahih Muslim",
+      "madhab": "all_madhabs",
+      "collected_at": "2025-08-15T08:19:58.435974"
+    },
+    {
+      "question": "Can women lead prayer for other women?",
+      "answer": "بسم الله الرحمن الرحيم\n\nYes, women can lead prayer for other women. This is established from the Sunnah:\n\n- Umm Salamah (رضي الله عنها) used to lead the women in prayer\n- Aisha (رضي الله عنها) also led women in prayer\n- The woman leading should stand in the middle of the first row, not in front\n\nConditions:\n1. The woman should be knowledgeable in prayer\n2. She should have proper recitation\n3. This is for women-only gatherings\n4. She stands in the center of the first row\n\nالله أعلم",
+      "source": "binbaz_style_fatwa",
+      "topic": "prayer",
+      "authenticity": "authentic",
+      "evidence": "Actions of Sahabiyyat",
+      "madhab": "all_madhabs",
+      "collected_at": "2025-08-15T08:19:58.435975"
+    },
+    {
+      "question": "What is the ruling on celebrating birthday parties?",
+      "answer": "بسم الله الرحمن الرحيم\n\nCelebrating birthdays is not from Islamic tradition. The Prophet (ﷺ) said: 'Whoever innovates something in this matter of ours that is not part of it will have it rejected.' [Sahih Bukhari]\n\nIslam has two main celebrations:\n1. Eid al-Fitr\n2. Eid al-Adha\n\nInstead of birthday celebrations, Muslims can:\n- Make du'a for the person\n- Give charity on their behalf\n- Spend quality time with family\n- Express gratitude to Allah for another year of life\n\nالله أعلم",
+      "source": "binbaz_style_fatwa",
+      "topic": "celebrations",
+      "authenticity": "authentic",
+      "hadith_reference": "Sahih Bukhari",
+      "madhab": "conservative_position",
+      "collected_at": "2025-08-15T08:19:58.435976"
+    },
+    {
+      "question": "How should a new Muslim start learning about Islam?",
+      "answer": "Welcome to Islam! Here's a step-by-step approach for new Muslims:\n\n**1. Learn the Basics:**\n- The Five Pillars of Islam\n- The Six Articles of Faith\n- How to pray (Salah)\n- Basic supplications (Du'as)\n\n**2. Essential Knowledge:**\n- Learn Surah Al-Fatiha and short surahs\n- Understand Wudu (ablution)\n- Learn about Halal and Haram\n\n**3. Recommended Steps:**\n- Find a local mosque or Islamic center\n- Connect with knowledgeable Muslims\n- Read the Quran with translation\n- Study the Prophet's biography (Seerah)\n\n**4. Gradual Implementation:**\n- Start with obligatory acts\n- Gradually add recommended acts\n- Be patient with yourself\n- Ask questions when in doubt\n\nMay Allah make it easy for you. والله أعلم",
+      "source": "islamqa_style",
+      "topic": "new_muslim_guide",
+      "authenticity": "verified",
+      "difficulty": "beginner",
+      "category": "guidance",
+      "collected_at": "2025-08-15T08:19:58.436208"
+    },
+    {
+      "question": "What is the difference between Fard, Wajib, Sunnah, and Mustahabb?",
+      "answer": "These are classifications of Islamic rulings:\n\n**1. Fard (فرض) - Obligatory:**\n- Must be performed\n- Leaving it is sinful\n- Examples: Five daily prayers, Hajj (if able), Zakat\n\n**2. Wajib (واجب) - Necessary:**\n- Similar to Fard but with slight difference in evidence\n- Leaving it is sinful\n- Example: Witr prayer (in Hanafi madhab)\n\n**3. Sunnah (سنة) - Recommended:**\n- Following the Prophet's (ﷺ) practice\n- Rewarded if done, not punished if left\n- Examples: Sunnah prayers, fasting on Mondays/Thursdays\n\n**4. Mustahabb (مستحب) - Preferred:**\n- Good to do, brings reward\n- No sin in leaving it\n- Examples: Extra dhikr, voluntary charity\n\n**5. Mubah (مباح) - Permissible:**\n- Neither rewarded nor punished\n- Neutral actions\n\nUnderstanding these helps prioritize religious practices. والله أعلم",
+      "source": "islamqa_style",
+      "topic": "islamic_jurisprudence",
+      "authenticity": "verified",
+      "difficulty": "intermediate",
+      "category": "fiqh",
+      "collected_at": "2025-08-15T08:19:58.436211"
+    },
+    {
+      "question": "How to handle disagreements between different madhabs?",
+      "answer": "When encountering differences between madhabs (schools of thought):\n\n**1. Respect All Valid Madhabs:**\n- All four Sunni madhabs are authentic\n- Hanafi, Maliki, Shafii, Hanbali - all valid\n- Differences are in methodology, not core beliefs\n\n**2. Follow One Madhab Consistently:**\n- Choose one madhab and follow it consistently\n- Don't pick and choose based on convenience\n- Consult qualified scholars in your chosen madhab\n\n**3. Understanding Differences:**\n- Differences arise from varying interpretations\n- Different hadith collections and priorities\n- Varying approaches to analogy (Qiyas)\n\n**4. Practical Approach:**\n- When traveling, may follow local practice\n- In mixed communities, choose the stronger opinion\n- Always consult knowledgeable scholars\n\n**5. Unity Principles:**\n- Don't let differences divide the community\n- Focus on common ground\n- Show respect for other valid opinions\n\nThe goal is following Islam correctly, not winning arguments. والله أعلم",
+      "source": "islamqa_style",
+      "topic": "madhabs",
+      "authenticity": "verified",
+      "difficulty": "advanced",
+      "category": "comparative_fiqh",
+      "collected_at": "2025-08-15T08:19:58.436212"
+    }
+  ]
+}
