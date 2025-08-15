@@ -29,9 +29,15 @@ services:
       - key: CORS_ORIGINS
         value: https://budulai.com,https://app.budulai.com,https://islamicgpt.com
       - key: ISLAMIC_AI_MODEL_PATH
-        value: /opt/render/project/src/models/sunni_islamic_ai
+        value: /opt/render/project/src/models/islamic-ai
       - key: AUTHENTICITY_THRESHOLD
         value: "0.85"
+      - key: ENHANCED_DATASET_VERSION
+        value: "2.0"
+      - key: DATASET_QUALITY_SCORE
+        value: "81.25"
+      - key: MADHAB_COVERAGE
+        value: "hanafi,maliki,shafii,hanbali"
     
   # Frontend Static Site
   - type: web
