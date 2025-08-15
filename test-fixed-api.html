@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕌 BudulGPT Fixed API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .test-form {
+            margin: 20px 0;
+        }
+        .test-form input, .test-form button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .test-form button {
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .test-form button:hover {
+            background: #218838;
+        }
+        .test-form button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .response-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .islamic-response {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .citations {
+            background: #f0f8ff;
+            padding: 10px;
+            border-left: 3px solid #007bff;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕌 BudulGPT API Connection Test</h1>
+            <p>Testing the fixed frontend-backend connection</p>
+        </div>
+
+        <div id="status" class="status loading">
+            🔄 Initializing connection test...
+        </div>
+
+        <div class="test-form">
+            <h3>📝 Test Islamic AI Chat</h3>
+            <input type="text" id="testMessage" value="What are the five pillars of Islam?" placeholder="Enter your Islamic question...">
+            <button id="testButton" onclick="testConnection()">Test Connection</button>
+        </div>
+
+        <div class="metrics" id="metrics" style="display: none;">
+            <div class="metric">
+                <div class="metric-value" id="responseTime">-</div>
+                <div class="metric-label">Response Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="authenticityScore">-</div>
+                <div class="metric-label">Authenticity Score</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="citationsCount">-</div>
+                <div class="metric-label">Citations</div>
+            </div>
+        </div>
+
+        <div id="islamicResponse" class="islamic-response" style="display: none;">
+            <h4>🤖 BudulGPT Response:</h4>
+            <div id="responseText"></div>
+        </div>
+
+        <div id="citations" class="citations" style="display: none;">
+            <h5>📚 Islamic Citations:</h5>
+            <div id="citationsList"></div>
+        </div>
+
+        <div class="response-box">
+            <h4>🔧 Technical Details:</h4>
+            <div id="technicalDetails">Click "Test Connection" to see technical details...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://budulgpt-backend.onrender.com/api/v1';
+        
+        async function testConnection() {
+            const message = document.getElementById('testMessage').value;
+            const statusDiv = document.getElementById('status');
+            const testButton = document.getElementById('testButton');
+            const technicalDiv = document.getElementById('technicalDetails');
+            
+            // Reset UI
+            testButton.disabled = true;
+            testButton.textContent = '🔄 Testing...';
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = '🔄 Testing connection to BudulGPT backend...';
+            document.getElementById('metrics').style.display = 'none';
+            document.getElementById('islamicResponse').style.display = 'none';
+            document.getElementById('citations').style.display = 'none';
+            
+            try {
+                const startTime = Date.now();
+                
+                // Test the exact same API call the frontend will make
+                const response = await fetch(`${API_URL}/chat/islamic`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+                
+                const responseTime = Date.now() - startTime;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update status
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `
+                    ✅ <strong>Connection Successful!</strong><br>
+                    Your frontend can now connect to the backend properly.
+                `;
+                
+                // Show metrics
+                document.getElementById('metrics').style.display = 'grid';
+                document.getElementById('responseTime').textContent = responseTime;
+                document.getElementById('authenticityScore').textContent = (data.authenticity_score * 100).toFixed(1) + '%';
+                document.getElementById('citationsCount').textContent = data.citations?.length || 0;
+                
+                // Show Islamic response
+                document.getElementById('islamicResponse').style.display = 'block';
+                document.getElementById('responseText').textContent = data.response || 'No response received';
+                
+                // Show citations if available
+                if (data.citations && data.citations.length > 0) {
+                    document.getElementById('citations').style.display = 'block';
+                    const citationsList = document.getElementById('citationsList');
+                    citationsList.innerHTML = data.citations.map(c => 
+                        `• <strong>${c.type}</strong>: ${c.reference} (${c.source})`
+                    ).join('<br>');
+                }
+                
+                // Show technical details
+                technicalDiv.innerHTML = `
+<strong>✅ API Test Results:</strong>
+
+🔗 <strong>Endpoint:</strong> ${API_URL}/chat/islamic
+📊 <strong>Status:</strong> ${response.status} ${response.statusText}
+⏱️ <strong>Response Time:</strong> ${responseTime}ms
+🔑 <strong>Response ID:</strong> ${data.response_id}
+📈 <strong>Confidence:</strong> ${data.confidence}
+🎯 <strong>Authenticity:</strong> ${(data.authenticity_score * 100).toFixed(1)}%
+
+<strong>📋 Request Format (WORKING):</strong>
+{
+  "message": "${message}"
+}
+
+<strong>📨 Response Format:</strong>
+{
+  "response_id": "${data.response_id}",
+  "response": "Islamic response text...",
+  "authenticity_score": ${data.authenticity_score},
+  "citations": [${data.citations?.length || 0} citations],
+  "confidence": "${data.confidence}",
+  "timestamp": "${data.timestamp}"
+}
+
+🎉 <strong>Result:</strong> Frontend API connection is now FIXED!
+                `;
+                
+            } catch (error) {
+                console.error('Connection test failed:', error);
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    ❌ <strong>Connection Failed:</strong><br>
+                    ${error.message}
+                `;
+                
+                technicalDiv.innerHTML = `
+<strong>❌ Connection Error:</strong>
+
+🚨 <strong>Error:</strong> ${error.message}
+🔗 <strong>Attempted URL:</strong> ${API_URL}/chat/islamic
+
+<strong>🔧 Troubleshooting:</strong>
+1. Check if backend is running: https://budulgpt-backend.onrender.com
+2. Verify CORS settings allow your domain
+3. Check browser console for detailed errors
+4. Ensure request format matches backend expectations
+
+<strong>💡 Next Steps:</strong>
+- Check backend deployment status on Render
+- Verify environment variables are correct
+- Test API directly with curl command
+                `;
+            }
+            
+            // Re-enable button
+            testButton.disabled = false;
+            testButton.textContent = 'Test Connection';
+        }
+        
+        // Auto-run test on page load
+        window.onload = () => {
+            setTimeout(() => {
+                testConnection();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
