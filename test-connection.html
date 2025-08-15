@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BudulGPT Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        textarea { width: 100%; height: 150px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🕌 BudulGPT Connection Test</h1>
+    
+    <div>
+        <h3>Backend URL:</h3>
+        <input type="text" id="backendUrl" value="https://budulgpt-backend.onrender.com" style="width: 100%; padding: 5px;">
+    </div>
+    
+    <div>
+        <h3>Test Message:</h3>
+        <input type="text" id="testMessage" value="What are the five pillars of Islam?" style="width: 100%; padding: 5px;">
+    </div>
+    
+    <button onclick="testConnection()">Test Connection</button>
+    
+    <div id="results"></div>
+    
+    <h3>Raw Response:</h3>
+    <textarea id="rawResponse" readonly></textarea>
+
+    <script>
+        async function testConnection() {
+            const backendUrl = document.getElementById('backendUrl').value;
+            const message = document.getElementById('testMessage').value;
+            const resultsDiv = document.getElementById('results');
+            const rawResponseDiv = document.getElementById('rawResponse');
+            
+            resultsDiv.innerHTML = '<div class="test-result">Testing connection...</div>';
+            
+            try {
+                // Test 1: Basic backend connectivity
+                console.log('Testing basic connectivity...');
+                const healthResponse = await fetch(backendUrl);
+                const healthData = await healthResponse.json();
+                
+                resultsDiv.innerHTML += `
+                    <div class="test-result success">
+                        ✅ Backend Health Check: ${healthData.status || 'operational'}
+                    </div>
+                `;
+                
+                // Test 2: Islamic chat API
+                console.log('Testing Islamic chat API...');
+                const chatResponse = await fetch(`${backendUrl}/api/v1/chat/islamic`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+                
+                if (!chatResponse.ok) {
+                    throw new Error(`HTTP ${chatResponse.status}: ${chatResponse.statusText}`);
+                }
+                
+                const chatData = await chatResponse.json();
+                rawResponseDiv.value = JSON.stringify(chatData, null, 2);
+                
+                resultsDiv.innerHTML += `
+                    <div class="test-result success">
+                        ✅ Islamic Chat API: Working correctly
+                        <br>Response length: ${chatData.response?.length || 0} characters
+                        <br>Authenticity Score: ${chatData.authenticity_score || 'N/A'}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Connection test failed:', error);
+                resultsDiv.innerHTML += `
+                    <div class="test-result error">
+                        ❌ Connection Error: ${error.message}
+                        <br>Check browser console for details
+                    </div>
+                `;
+                rawResponseDiv.value = `Error: ${error.message}`;
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = () => {
+            setTimeout(testConnection, 1000);
+        };
+    </script>
+</body>
+</html>
