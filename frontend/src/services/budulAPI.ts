@@ -76,14 +76,34 @@ class BudulAPI {
   // Chat with Islamic AI
   async chat(request: ChatRequest): Promise<ChatResponse> {
     try {
-      // Direct API call - backend should handle CORS properly
-      const response = await fetch(`${this.baseUrl}/chat/islamic`, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify({
-          message: request.message
-        })
-      })
+      // Try direct API call first
+      let response: Response;
+      
+      try {
+        response = await fetch(`${this.baseUrl}/chat/islamic`, {
+          method: 'POST',
+          headers: this.headers,
+          mode: 'cors',
+          credentials: 'omit',
+          body: JSON.stringify({
+            message: request.message
+          })
+        });
+      } catch (fetchError) {
+        console.warn('Direct fetch failed, trying alternative approach:', fetchError);
+        
+        // Fallback: Try with simplified headers
+        response = await fetch(`${this.baseUrl}/chat/islamic`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          mode: 'cors',
+          body: JSON.stringify({
+            message: request.message
+          })
+        });
+      }
 
       if (!response.ok) {
         const errorData = await response.json()

@@ -35,7 +35,12 @@ class Settings(BaseSettings):
     
     # CORS
     CORS_ORIGINS: List[str] = [
-        "*"  # Allow all origins for now - will restrict later
+        "*",
+        "https://budulgpt-frontend.onrender.com",
+        "https://budulai.com", 
+        "https://www.budulai.com",
+        "http://localhost:3000",
+        "http://localhost:3001"
     ]
     
     # Trusted Hosts
