@@ -76,17 +76,13 @@ class BudulAPI {
   // Chat with Islamic AI
   async chat(request: ChatRequest): Promise<ChatResponse> {
     try {
-      // Use CORS proxy to bypass CORS issues
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
-      const targetUrl = `${this.baseUrl}/chat/islamic`
-      
-      const response = await fetch(`${proxyUrl}${targetUrl}`, {
+      // Direct API call - backend should handle CORS properly
+      const response = await fetch(`${this.baseUrl}/chat/islamic`, {
         method: 'POST',
-        headers: {
-          ...this.headers,
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(request)
+        headers: this.headers,
+        body: JSON.stringify({
+          message: request.message
+        })
       })
 
       if (!response.ok) {
@@ -103,15 +99,20 @@ class BudulAPI {
         throw new Error('Invalid response format from Islamic AI backend');
       }
       
-      // Adapt your backend response format to frontend expectations
+      // Map backend response to frontend format
       return {
         response_id: data.response_id || 'resp_' + Date.now(),
         message: request.message,
         session_id: request.session_id || 'session_' + Date.now(),
-        response_text: data.response || data.response_text || data.message || 'No response received',
-        confidence_score: typeof data.authenticity_score === 'number' ? data.authenticity_score : 0.9,
+        response_text: data.response || 'No response received',
+        confidence_score: data.confidence === 'high' ? 0.9 : data.confidence === 'medium' ? 0.7 : 0.5,
         authenticity_score: typeof data.authenticity_score === 'number' ? data.authenticity_score : 0.9,
-        citations: Array.isArray(data.citations) ? data.citations : [],
+        citations: Array.isArray(data.citations) ? data.citations.map((c: any) => ({
+          type: c.type || 'hadith',
+          reference: c.reference || 'Unknown',
+          text: c.source || c.reference || '',
+          relevance: 1.0
+        })) : [],
         sources: Array.isArray(data.citations) ? data.citations.map((c: any) => c.reference || c.source || 'Unknown') : [],
         related_topics: Array.isArray(data.related_topics) ? data.related_topics : [],
         requires_scholar_review: false,
