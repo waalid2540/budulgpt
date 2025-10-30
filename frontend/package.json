@@ -1,7 +1,7 @@
 {
-  "name": "budul-ai-frontend",
-  "version": "1.0.1",
-  "description": "Budul AI Frontend - Islamic Intelligence for the Modern World",
+  "name": "madinagpt-frontend",
+  "version": "2.0.0",
+  "description": "MadinaGPT - Faith, Knowledge, and Guidance | Supporting Masjid Madina",
   "private": true,
   "scripts": {
     "dev": "next dev",

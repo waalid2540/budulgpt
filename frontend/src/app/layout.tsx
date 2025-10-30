@@ -10,21 +10,21 @@ const amiri = Amiri({
 })
 
 export const metadata: Metadata = {
-  title: 'Budul AI - The OpenAI for the Islamic World',
-  description: 'Islamic artificial intelligence that serves the Muslim community with authentic, scholar-verified knowledge and creative tools. Built on the foundation of Islamic wisdom.',
-  keywords: ['Islamic AI', 'Budul AI', 'Islamic GPT', 'Halal AI', 'Muslim AI', 'Islamic Technology', 'Quran AI', 'Hadith AI'],
-  authors: [{ name: 'Budul AI Team' }],
+  title: 'MadinaGPT - Faith, Knowledge, and Guidance',
+  description: 'MadinaGPT: Your Islamic AI companion for faith, knowledge, and guidance. Supporting Masjid Madina with authentic Islamic content, duas, and stories for the whole family.',
+  keywords: ['MadinaGPT', 'Islamic AI', 'Madina GPT', 'Islamic ChatGPT', 'Muslim AI', 'Dua Generator', 'Islamic Stories', 'Umrah Alert', 'Masjid Madina'],
+  authors: [{ name: 'MadinaGPT Team' }],
   openGraph: {
-    title: 'Budul AI - The OpenAI for the Islamic World',
-    description: 'Islamic artificial intelligence serving 1.8 billion Muslims worldwide with authentic, scholar-verified knowledge.',
-    url: 'https://budulai.com',
-    siteName: 'Budul AI',
+    title: 'MadinaGPT - Faith, Knowledge, and Guidance',
+    description: 'Islamic AI platform supporting Masjid Madina. Chat with MadinaGPT, generate duas, create Islamic stories for kids, and more.',
+    url: 'https://madinagpt.com',
+    siteName: 'MadinaGPT',
     images: [
       {
-        url: 'https://budulai.com/og-image.jpg',
+        url: 'https://madinagpt.com/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Budul AI - Islamic Artificial Intelligence Platform',
+        alt: 'MadinaGPT - Islamic AI Platform Supporting Masjid Madina',
       },
     ],
     locale: 'en_US',
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Budul AI - The OpenAI for the Islamic World',
-    description: 'Islamic artificial intelligence serving 1.8 billion Muslims worldwide.',
-    images: ['https://budulai.com/og-image.jpg'],
-    creator: '@BudulAI',
+    title: 'MadinaGPT - Faith, Knowledge, and Guidance',
+    description: 'Islamic AI platform supporting Masjid Madina with authentic Islamic content and tools.',
+    images: ['https://madinagpt.com/og-image.jpg'],
+    creator: '@MadinaGPT',
   },
   robots: {
     index: true,
@@ -61,33 +61,33 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0d4f3c" />
-        
-        {/* Structured Data for Islamic AI Platform */}
+        <meta name="theme-color" content="#059669" />
+
+        {/* Structured Data for MadinaGPT - Islamic AI Platform */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "Budul AI",
-              "description": "Islamic artificial intelligence platform serving the Muslim community with authentic, scholar-verified knowledge and creative tools.",
-              "url": "https://budulai.com",
+              "name": "MadinaGPT",
+              "description": "MadinaGPT - Islamic AI platform supporting Masjid Madina. Faith, Knowledge, and Guidance for the Muslim community with authentic Islamic content.",
+              "url": "https://madinagpt.com",
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "Web",
               "offers": {
                 "@type": "Offer",
-                "price": "0",
+                "price": "9.99",
                 "priceCurrency": "USD",
-                "priceValidUntil": "2025-12-31"
+                "priceValidUntil": "2026-12-31",
+                "description": "Monthly subscription - 50% proceeds support Masjid Madina"
               },
               "creator": {
                 "@type": "Organization",
-                "name": "Budul AI",
-                "url": "https://budulai.com",
+                "name": "MadinaGPT",
+                "url": "https://madinagpt.com",
                 "sameAs": [
-                  "https://twitter.com/BudulAI",
-                  "https://github.com/budul-ai"
+                  "https://twitter.com/MadinaGPT"
                 ]
               },
               "audience": {
@@ -99,7 +99,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-islamic-gradient min-h-screen`}>
+      <body className={`${inter.className} bg-madina-gradient min-h-screen`}>
         <div className="flex flex-col min-h-screen">
           <main className="flex-1">
             {children}

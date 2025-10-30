@@ -1,5 +1,6 @@
 """
-Configuration settings for Budul AI
+Configuration settings for MadinaGPT
+Faith, Knowledge, and Guidance - Supporting Masjid Madina
 """
 
 import os
@@ -9,19 +10,21 @@ from pydantic import validator
 
 class Settings(BaseSettings):
     """Application settings"""
-    
+
     # App Info
-    APP_NAME: str = "Budul AI"
-    VERSION: str = "1.0.0"
+    APP_NAME: str = "MadinaGPT"
+    PROJECT_NAME: str = "MadinaGPT"
+    VERSION: str = "2.0.0"
     ENVIRONMENT: str = "development"
-    
+    TAGLINE: str = "Faith, Knowledge, and Guidance"
+
     # Security
-    SECRET_KEY: str = "budul-ai-secret-key-change-in-production"
+    SECRET_KEY: str = "madinagpt-secret-key-change-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    
+
     # Database
-    DATABASE_URL: str = "postgresql://postgres:budul_secure_2024@localhost:5432/budul_ai"
+    DATABASE_URL: str = "postgresql://postgres:madinagpt_secure_2024@localhost:5432/madinagpt"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
@@ -36,21 +39,21 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = [
         "*",
-        "https://budulgpt-frontend.onrender.com",
-        "https://budulai.com", 
-        "https://www.budulai.com",
+        "https://madinagpt.vercel.app",
+        "https://madinagpt.com",
+        "https://www.madinagpt.com",
         "http://localhost:3000",
         "http://localhost:3001"
     ]
-    
+
     # Trusted Hosts
     ALLOWED_HOSTS: List[str] = [
         "localhost",
         "127.0.0.1",
-        "budulai.com",
-        "www.budulai.com",
-        "budulgpt-backend.onrender.com",
-        "budulgpt-frontend.onrender.com"
+        "madinagpt.com",
+        "www.madinagpt.com",
+        "madinagpt-backend.onrender.com",
+        "madinagpt.vercel.app"
     ]
     
     # Islamic Sources Configuration
@@ -81,7 +84,7 @@ class Settings(BaseSettings):
         "request_timeout": 30,
         "retry_attempts": 3,
         "respect_robots_txt": True,
-        "user_agent": "BudulAI/1.0 (+https://budulai.com/bot)"
+        "user_agent": "MadinaGPT/2.0 (+https://madinagpt.com/bot)"
     }
     
     # File Storage

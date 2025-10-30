@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕌 BudulGPT - Islamic AI Chat (Working Version)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 95%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 12px;
+            max-width: 85%;
+            line-height: 1.6;
+        }
+        
+        .user-message {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .bot-message {
+            background: white;
+            color: #333;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-container input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .input-container input:focus {
+            border-color: #28a745;
+        }
+        
+        .input-container button {
+            padding: 15px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            min-width: 80px;
+        }
+        
+        .input-container button:hover:not(:disabled) {
+            background: #218838;
+        }
+        
+        .input-container button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .status {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            background: #e8f5e8;
+            color: #155724;
+        }
+        
+        .citations {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-left: 3px solid #007bff;
+            font-size: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .citation {
+            margin: 2px 0;
+        }
+        
+        .authenticity-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span>🕌</span>
+                <span>BudulGPT - Islamic AI</span>
+            </h1>
+            <p>Enhanced with Authentic Islamic Dataset | Working Version</p>
+        </div>
+        
+        <div class="status" id="status">
+            🔄 Connecting to Islamic AI backend...
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot-message">
+                <strong>As-salamu alaykum! 🕌</strong><br>
+                I'm BudulGPT, your Islamic AI assistant powered by authentic Islamic sources. I can help you with:
+                <br><br>
+                • Islamic guidance and Q&A<br>
+                • Prayer and worship questions<br>
+                • Quran and Hadith explanations<br>
+                • Fiqh (Islamic jurisprudence)<br>
+                • Multi-madhab perspectives<br>
+                <br>
+                Ask me any Islamic question to get started!
+                <span class="authenticity-badge">100% Authentic</span>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Ask any Islamic question..." 
+                onkeypress="handleKeyPress(event)"
+            >
+            <button onclick="sendMessage()" id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://budulgpt-backend.onrender.com/api/v1';
+        let isConnected = false;
+        
+        // Test connection on load
+        async function testConnection() {
+            const statusEl = document.getElementById('status');
+            try {
+                const response = await fetch(`${API_URL}/chat/islamic`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Test connection'
+                    })
+                });
+                
+                if (response.ok) {
+                    statusEl.textContent = '✅ Connected to Islamic AI backend - Ready to chat!';
+                    statusEl.style.background = '#e8f5e8';
+                    statusEl.style.color = '#155724';
+                    isConnected = true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Connection test failed:', error);
+                statusEl.textContent = `⚠️ Backend connecting... (${error.message}) - Please wait or try refreshing`;
+                statusEl.style.background = '#fff3cd';
+                statusEl.style.color = '#856404';
+                
+                // Retry in 10 seconds
+                setTimeout(testConnection, 10000);
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatContainer = document.getElementById('chatContainer');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = message;
+            chatContainer.appendChild(userDiv);
+            
+            // Clear input and disable button
+            input.value = '';
+            sendButton.disabled = true;
+            sendButton.textContent = '...';
+            
+            // Add loading message
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-message loading';
+            loadingDiv.innerHTML = '<span>🤔</span> <span>Searching authentic Islamic sources...</span>';
+            chatContainer.appendChild(loadingDiv);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            try {
+                const response = await fetch(`${API_URL}/chat/islamic`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                loadingDiv.remove();
+                
+                // Add bot response
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot-message';
+                
+                let responseHTML = `<strong>Islamic AI Response:</strong><br><br>`;
+                responseHTML += data.response.replace(/\n/g, '<br>');
+                
+                // Add authenticity score
+                if (data.authenticity_score) {
+                    const score = Math.round(data.authenticity_score * 100);
+                    responseHTML += `<span class="authenticity-badge">${score}% Authentic</span>`;
+                }
+                
+                // Add citations if available
+                if (data.citations && data.citations.length > 0) {
+                    responseHTML += '<div class="citations"><strong>📚 Islamic Sources:</strong><br>';
+                    data.citations.forEach(citation => {
+                        responseHTML += `<div class="citation">• <strong>${citation.type}</strong>: ${citation.reference}</div>`;
+                    });
+                    responseHTML += '</div>';
+                }
+                
+                botDiv.innerHTML = responseHTML;
+                chatContainer.appendChild(botDiv);
+                
+            } catch (error) {
+                console.error('Chat error:', error);
+                loadingDiv.remove();
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'message bot-message';
+                errorDiv.innerHTML = `
+                    <strong>⚠️ Connection Error:</strong><br><br>
+                    Unable to connect to the Islamic AI backend. This might be because:<br>
+                    • Backend is still deploying (please wait 2-3 minutes)<br>
+                    • Network connectivity issues<br>
+                    • CORS configuration updating<br><br>
+                    <strong>Please try again in a moment.</strong><br>
+                    Error: ${error.message}
+                `;
+                chatContainer.appendChild(errorDiv);
+            }
+            
+            // Re-enable button
+            sendButton.disabled = false;
+            sendButton.textContent = 'Send';
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // Test connection on page load
+        window.onload = () => {
+            testConnection();
+            
+            // Try example questions
+            const examples = [
+                "What are the five pillars of Islam?",
+                "How do I perform wudu?",
+                "What is the meaning of Bismillah?",
+                "When are the prayer times?",
+                "What is halal and haram?"
+            ];
+            
+            const input = document.getElementById('messageInput');
+            input.placeholder = examples[Math.floor(Math.random() * examples.length)];
+        };
+    </script>
+</body>
+</html>

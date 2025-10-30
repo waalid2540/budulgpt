@@ -132,17 +132,17 @@ export default function ChatPage() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">ب</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-xl">م</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  Budul GPT
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">
+                  MadinaGPT
                 </h1>
                 <p className="text-sm text-slate-600">Islamic AI Assistant</p>
               </div>
             </div>
-            
+
             {/* Connection Status */}
             <div className="flex items-center space-x-2">
               <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}></div>
@@ -161,15 +161,17 @@ export default function ChatPage() {
           {/* Welcome Message */}
           {messages.length === 0 && (
             <div className="p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Bot className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-slate-800 mb-4">
-                السلام عليكم! Welcome to Budul GPT
+                السلام عليكم! Welcome to MadinaGPT
               </h2>
               <p className="text-slate-600 mb-6 leading-relaxed">
-                I'm your Islamic AI assistant, trained on authentic Islamic sources. 
+                I'm your Islamic AI assistant powered by authentic Islamic sources.
                 Ask me about Islamic knowledge, and I'll provide responses with Quran and Hadith citations.
+                <br />
+                <span className="font-semibold text-madina-green-600">Supporting Masjid Madina</span>
               </p>
               
               {!isConnected && (
@@ -239,7 +241,7 @@ export default function ChatPage() {
                       {message.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                     </div>
                     <span className="text-sm font-medium text-slate-600">
-                      {message.role === 'user' ? 'You' : 'Budul GPT'}
+                      {message.role === 'user' ? 'You' : 'MadinaGPT'}
                     </span>
                   </div>
 
@@ -292,7 +294,7 @@ export default function ChatPage() {
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                    <span className="text-slate-500 text-sm ml-2">Budul GPT is thinking...</span>
+                    <span className="text-slate-500 text-sm ml-2">MadinaGPT is thinking...</span>
                   </div>
                 </div>
               </div>

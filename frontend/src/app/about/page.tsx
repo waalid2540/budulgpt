@@ -1,137 +1,155 @@
 'use client'
 
 import Link from 'next/link'
+import { Heart, Users, BookOpen, Home, Sparkles, ArrowRight } from 'lucide-react'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-islamic-gradient bg-islamic-pattern">
-      {/* Hero Section - Family Legacy */}
-      <section className="py-20 lg:py-32">
-        <div className="container-islamic">
+    <div className="min-h-screen bg-madina-gradient relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-madina-green-400/20 to-madina-green-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-madina-gold-400/20 to-madina-gold-500/20 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-madina-green-100 shadow-madina-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-xl flex items-center justify-center shadow-madina">
+                <span className="text-white font-bold text-xl">م</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">
+                  MadinaGPT
+                </h1>
+              </div>
+            </Link>
+            <Link href="/" className="text-slate-700 hover:text-madina-green-600 font-medium">
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="space-islamic">
-              <div className="mb-8">
-                <span className="inline-block px-4 py-2 bg-islamic-green-100 text-islamic-green-800 rounded-full text-sm font-semibold">
-                  🕌 Built on the Foundation of Islamic Wisdom
-                </span>
-              </div>
-              
-              <h1 className="text-display mb-8">
-                <span className="text-islamic-gradient">Named After</span>
-                <br />
-                <span className="text-islamic-green-900">My Grandfather</span>
-              </h1>
-              
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-islamic-xl border border-islamic-green-100 mb-12">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-islamic-green-600 to-islamic-gold-600 rounded-full flex items-center justify-center shadow-islamic-lg">
-                    <span className="text-white font-bold text-3xl arabic">ب</span>
-                  </div>
-                </div>
-                
-                <blockquote className="text-body-large text-islamic-green-800 italic leading-relaxed">
-                  "Budul AI is named after my grandfather, whose Islamic knowledge and wisdom guided our large family for generations. 
-                  Today, we're bringing that same authentic Islamic guidance to 1.8 billion Muslims worldwide through the power of artificial intelligence."
-                </blockquote>
-                
-                <div className="mt-8 p-6 bg-islamic-gold-50 rounded-2xl border-l-4 border-islamic-gold-400">
-                  <p className="text-body text-islamic-green-800 leading-relaxed">
-                    "As an imam, scholar, and technology entrepreneur with 20+ successful platforms, I'm uniquely positioned to ensure 
-                    Budul AI maintains the highest standards of Islamic authenticity while leveraging cutting-edge AI technology."
-                  </p>
-                  <div className="mt-4 flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-islamic-gold-500 rounded-full"></div>
-                    <span className="text-sm font-medium text-islamic-green-700">Founder & Chief Islamic Officer</span>
-                    <div className="w-2 h-2 bg-islamic-gold-500 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
+            <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-xl rounded-full px-6 py-3 mb-8 border border-madina-green-200 shadow-madina-lg">
+              <span className="text-2xl">🕌</span>
+              <span className="text-madina-green-700 font-semibold">Supporting Masjid Madina</span>
+              <Sparkles className="w-4 h-4 text-madina-gold-400" />
             </div>
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">
+                MadinaGPT
+              </span>
+              <br />
+              <span className="text-slate-800">Faith, Knowledge, and Guidance</span>
+            </h1>
+
+            <p className="text-xl text-slate-600 leading-relaxed mb-12">
+              MadinaGPT is an Islamic AI initiative that supports Masjid Madina through technology.
+              <br />
+              <span className="font-bold text-madina-green-600">50% of all subscription proceeds</span> directly fund
+              masjid operations, community programs, and da'wah efforts.
+            </p>
           </div>
         </div>
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20 bg-white/80 backdrop-blur-sm">
-        <div className="container-islamic">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-headline mb-6 text-islamic-gradient">Our Sacred Mission</h2>
-              <div className="space-y-6">
-                <div className="card-islamic p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="feature-icon-islamic">
-                      <span className="text-2xl">🕌</span>
-                    </div>
-                    <div>
-                      <h3 className="text-title mb-3 text-islamic-green-900">Preserving Authentic Islamic Knowledge</h3>
-                      <p className="text-body text-islamic-green-700">
-                        Every response is grounded in authentic Islamic sources - the Quran, authentic Hadith, and scholarly consensus. 
-                        We ensure that AI serves Islam, not the other way around.
-                      </p>
-                    </div>
-                  </div>
+            <div className="space-y-8">
+              <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 border border-white/50 shadow-madina-xl">
+                <div className="w-16 h-16 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-2xl flex items-center justify-center mb-6">
+                  <Heart className="w-8 h-8 text-white" />
                 </div>
-                
-                <div className="card-islamic p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="feature-icon-islamic">
-                      <span className="text-2xl">🌍</span>
-                    </div>
-                    <div>
-                      <h3 className="text-title mb-3 text-islamic-green-900">Serving 1.8 Billion Muslims</h3>
-                      <p className="text-body text-islamic-green-700">
-                        From Morocco to Malaysia, from Nigeria to Indonesia - Budul AI speaks to Muslims in their languages, 
-                        understands their cultures, and respects their diverse interpretations within Islamic orthodoxy.
-                      </p>
-                    </div>
-                  </div>
+                <h2 className="text-3xl font-bold text-slate-800 mb-4">Our Mission</h2>
+                <p className="text-slate-600 leading-relaxed">
+                  MadinaGPT exists to serve the Muslim community by providing authentic Islamic AI tools while
+                  supporting Masjid Madina's vital community services. We believe technology should strengthen faith
+                  and support our masajid.
+                </p>
+              </div>
+
+              <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 border border-white/50 shadow-madina-xl">
+                <div className="w-16 h-16 bg-gradient-to-br from-madina-gold-400 to-madina-gold-500 rounded-2xl flex items-center justify-center mb-6">
+                  <Sparkles className="w-8 h-8 text-white" />
                 </div>
-                
-                <div className="card-islamic p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="feature-icon-islamic">
-                      <span className="text-2xl">💡</span>
-                    </div>
-                    <div>
-                      <h3 className="text-title mb-3 text-islamic-green-900">Innovation with Islamic Values</h3>
-                      <p className="text-body text-islamic-green-700">
-                        We believe technology should amplify faith, not diminish it. Budul AI represents the marriage of 
-                        grandfather's wisdom with tomorrow's technology.
-                      </p>
-                    </div>
+                <h2 className="text-3xl font-bold text-slate-800 mb-4">The 50% Model</h2>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Every MadinaGPT subscription is split transparently:
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-madina-green-500 rounded-full"></div>
+                    <span className="text-slate-700"><strong>$5.00</strong> → Masjid Madina operations & programs</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-madina-gold-400 rounded-full"></div>
+                    <span className="text-slate-700"><strong>$4.99</strong> → Development & server costs</span>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className="relative">
-              <div className="bg-gradient-to-br from-islamic-green-600 to-islamic-gold-600 rounded-3xl p-8 text-white shadow-islamic-xl">
-                <h3 className="text-title mb-6">The Vision</h3>
+
+            <div className="bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-3xl p-10 text-white shadow-madina-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+
+              <div className="relative">
+                <h3 className="text-3xl font-bold mb-6">About Masjid Madina</h3>
+                <p className="text-madina-green-50 leading-relaxed mb-8">
+                  Masjid Madina serves as a beacon of faith and community support. Your subscriptions help us continue
+                  providing essential services to the Muslim community.
+                </p>
+
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-islamic-gold-200">⭐</span>
-                    <span>Become the definitive Islamic AI platform</span>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <Home className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">5 Daily Prayers & Jumu'ah</h4>
+                      <p className="text-sm text-madina-green-100">A welcoming space for worship and congregation</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-islamic-gold-200">⭐</span>
-                    <span>Reach $1M+ monthly revenue serving the Ummah</span>
+
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <BookOpen className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Islamic Education</h4>
+                      <p className="text-sm text-madina-green-100">Weekend school, Quran classes, and youth programs</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-islamic-gold-200">⭐</span>
-                    <span>Maintain 100% Islamic authenticity at scale</span>
+
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <Users className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Community Support</h4>
+                      <p className="text-sm text-madina-green-100">Assistance for families, converts, and those in need</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-islamic-gold-200">⭐</span>
-                    <span>Bridge traditional Islamic scholarship with AI</span>
+
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <Heart className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Da'wah & Outreach</h4>
+                      <p className="text-sm text-madina-green-100">Spreading Islamic knowledge to the wider community</p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="mt-8 p-4 bg-white/20 rounded-2xl">
-                  <p className="text-sm italic">
-                    "Just as my grandfather's knowledge guided our family, Budul AI will guide the global Muslim community 
-                    into the digital age while staying true to our Islamic roots."
-                  </p>
                 </div>
               </div>
             </div>
@@ -139,124 +157,128 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Technology & Scholarship */}
-      <section className="py-20">
-        <div className="container-islamic">
+      {/* Features */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white/40">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-headline mb-6 text-islamic-gradient">Where Scholarship Meets Technology</h2>
-            <p className="text-body-large text-islamic-green-700 max-w-4xl mx-auto">
-              Budul AI is built by a unique combination of Islamic scholarship and technology expertise, 
-              ensuring both authenticity and innovation.
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">
+                What We Offer
+              </span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Premium Islamic AI tools designed for your spiritual journey
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 mb-16">
-            <div className="text-center">
-              <div className="feature-icon-islamic mx-auto mb-6">
-                <span className="text-3xl">📚</span>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/50 shadow-madina">
+              <div className="w-12 h-12 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-xl flex items-center justify-center mb-4 text-white text-2xl">
+                💬
               </div>
-              <h3 className="text-title mb-4 text-islamic-green-900">Islamic Scholarship</h3>
-              <ul className="text-body text-islamic-green-700 space-y-2">
-                <li>• Imam and Islamic scholar credentials</li>
-                <li>• Deep knowledge of Quran and Hadith</li>
-                <li>• Understanding of Islamic jurisprudence</li>
-                <li>• Respect for madhab differences</li>
-                <li>• Cultural sensitivity across Muslim world</li>
-              </ul>
-            </div>
-
-            <div className="text-center">
-              <div className="feature-icon-islamic mx-auto mb-6">
-                <span className="text-3xl">🏆</span>
-              </div>
-              <h3 className="text-title mb-4 text-islamic-green-900">Technology Expertise</h3>
-              <ul className="text-body text-islamic-green-700 space-y-2">
-                <li>• 20+ successful tech platforms</li>
-                <li>• AI and machine learning expertise</li>
-                <li>• Enterprise software development</li>
-                <li>• Scalable system architecture</li>
-                <li>• Product management excellence</li>
-              </ul>
-            </div>
-
-            <div className="text-center">
-              <div className="feature-icon-islamic mx-auto mb-6">
-                <span className="text-3xl">❤️</span>
-              </div>
-              <h3 className="text-title mb-4 text-islamic-green-900">Community Focus</h3>
-              <ul className="text-body text-islamic-green-700 space-y-2">
-                <li>• Built by Muslims, for Muslims</li>
-                <li>• Global Islamic community understanding</li>
-                <li>• Family legacy of Islamic guidance</li>
-                <li>• Commitment to authentic scholarship</li>
-                <li>• Long-term community service vision</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Statistics */}
-      <section className="py-20 bg-gradient-to-r from-islamic-green-600 to-islamic-gold-600">
-        <div className="container-islamic">
-          <div className="grid md:grid-cols-4 gap-8 text-center text-white">
-            <div>
-              <div className="text-5xl font-bold mb-2">1.8B+</div>
-              <div className="text-islamic-green-100">Muslims Worldwide</div>
-              <div className="text-sm opacity-75 mt-1">Our Target Community</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">20+</div>
-              <div className="text-islamic-green-100">Tech Platforms</div>
-              <div className="text-sm opacity-75 mt-1">Founder's Experience</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">100%</div>
-              <div className="text-islamic-green-100">Islamic Authenticity</div>
-              <div className="text-sm opacity-75 mt-1">Scholar Verified</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2">$1M+</div>
-              <div className="text-islamic-green-100">Revenue Goal</div>
-              <div className="text-sm opacity-75 mt-1">Monthly Target</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-20">
-        <div className="container-islamic">
-          <div className="max-w-4xl mx-auto text-center">
-            <div>
-              <h2 className="text-headline mb-6">
-                Join the <span className="text-islamic-gradient">Islamic AI Revolution</span>
-              </h2>
-              <p className="text-body-large text-islamic-green-700 mb-8">
-                Be part of building the future of Islamic technology, rooted in authentic scholarship and powered by cutting-edge AI.
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Madina GPT</h3>
+              <p className="text-slate-600 text-sm">
+                Ask Islamic questions and receive authentic, scholar-verified answers
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/chat">
-                  <button className="btn-islamic-primary text-lg px-8 py-4">
-                    Experience Budul GPT
-                  </button>
-                </Link>
-                <Link href="/contact">
-                  <button className="btn-islamic-outline text-lg px-8 py-4">
-                    Partner With Us
-                  </button>
-                </Link>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/50 shadow-madina">
+              <div className="w-12 h-12 bg-gradient-to-br from-madina-gold-400 to-madina-gold-500 rounded-xl flex items-center justify-center mb-4 text-white text-2xl">
+                🤲
               </div>
-              
-              <div className="mt-12 p-6 bg-islamic-gold-50 rounded-2xl border border-islamic-gold-200">
-                <p className="text-body text-islamic-green-800 italic leading-relaxed">
-                  "In a world where technology often distances us from our faith, Budul AI brings us closer to authentic Islamic wisdom. 
-                  This is not just a business - it's a sacred mission to serve the Ummah."
-                </p>
-                <div className="mt-4 text-sm font-medium text-islamic-green-700">
-                  — Founder, Budul AI
-                </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Du'ā Generator</h3>
+              <p className="text-slate-600 text-sm">
+                Generate beautiful duas with Arabic, transliteration, and English meanings
+              </p>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/50 shadow-madina">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 text-white text-2xl">
+                📚
               </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Kids Stories</h3>
+              <p className="text-slate-600 text-sm">
+                Islamic stories with moral lessons for children and families
+              </p>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/50 shadow-madina">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 text-white text-2xl">
+                🕋
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Umrah Alert</h3>
+              <p className="text-slate-600 text-sm">
+                Coming soon - AI-powered Umrah planning and guidance
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Stats */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-gradient-to-r from-madina-green-500 to-madina-green-600 rounded-3xl p-12 text-white">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4">Transparent Impact</h2>
+              <p className="text-madina-green-50 text-lg">Every subscription makes a real difference</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-5xl font-bold mb-2">50%</div>
+                <div className="text-madina-green-100 font-medium">Of Every Subscription</div>
+                <div className="text-sm text-madina-green-200 mt-1">Goes to Masjid Madina</div>
+              </div>
+              <div>
+                <div className="text-5xl font-bold mb-2">$9.99</div>
+                <div className="text-madina-green-100 font-medium">Monthly Subscription</div>
+                <div className="text-sm text-madina-green-200 mt-1">Transparent & Halal</div>
+              </div>
+              <div>
+                <div className="text-5xl font-bold mb-2">100%</div>
+                <div className="text-madina-green-100 font-medium">Authentic Islamic Content</div>
+                <div className="text-sm text-madina-green-200 mt-1">Verified by Scholars</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Join <span className="bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">MadinaGPT</span> Today
+          </h2>
+          <p className="text-xl text-slate-600 mb-12">
+            Support Masjid Madina while accessing premium Islamic AI tools for your spiritual journey
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/subscribe"
+              className="bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
+            >
+              <span>Subscribe - $9.99/mo</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/donate"
+              className="bg-gradient-to-r from-madina-gold-400 to-madina-gold-500 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            >
+              Donate to Masjid
+            </Link>
+          </div>
+
+          <div className="mt-16 p-8 bg-white/40 backdrop-blur-xl rounded-3xl border border-madina-green-200">
+            <p className="text-lg italic text-slate-700 mb-4 font-medium">
+              "MadinaGPT is an initiative supporting Masjid Madina. 50% of all proceeds fund community programs and da'wah efforts."
+            </p>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-madina-green-400 rounded-full"></div>
+              <span className="text-sm text-madina-green-600 font-semibold">MadinaGPT Team</span>
+              <div className="w-2 h-2 bg-madina-green-400 rounded-full"></div>
             </div>
           </div>
         </div>
