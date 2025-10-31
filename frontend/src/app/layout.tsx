@@ -77,10 +77,10 @@ export default function RootLayout({
               "operatingSystem": "Web",
               "offers": {
                 "@type": "Offer",
-                "price": "9.99",
+                "price": "4.99",
                 "priceCurrency": "USD",
                 "priceValidUntil": "2026-12-31",
-                "description": "Monthly subscription - 50% proceeds support Masjid Madina"
+                "description": "Monthly unlimited subscription - 50% proceeds support Masjid Madina"
               },
               "creator": {
                 "@type": "Organization",

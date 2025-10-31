@@ -89,11 +89,11 @@ export default function AboutPage() {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-madina-green-500 rounded-full"></div>
-                    <span className="text-slate-700"><strong>$5.00</strong> → Masjid Madina operations & programs</span>
+                    <span className="text-slate-700"><strong>$2.50</strong> → Masjid Madina operations & programs</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-madina-gold-400 rounded-full"></div>
-                    <span className="text-slate-700"><strong>$4.99</strong> → Development & server costs</span>
+                    <span className="text-slate-700"><strong>$2.49</strong> → Development & server costs</span>
                   </div>
                 </div>
               </div>
@@ -231,8 +231,8 @@ export default function AboutPage() {
                 <div className="text-sm text-madina-green-200 mt-1">Goes to Masjid Madina</div>
               </div>
               <div>
-                <div className="text-5xl font-bold mb-2">$9.99</div>
-                <div className="text-madina-green-100 font-medium">Monthly Subscription</div>
+                <div className="text-5xl font-bold mb-2">$4.99</div>
+                <div className="text-madina-green-100 font-medium">Monthly - Unlimited</div>
                 <div className="text-sm text-madina-green-200 mt-1">Transparent & Halal</div>
               </div>
               <div>
@@ -260,7 +260,7 @@ export default function AboutPage() {
               href="/subscribe"
               className="bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
             >
-              <span>Subscribe - $9.99/mo</span>
+              <span>Subscribe - $4.99/mo Unlimited</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link

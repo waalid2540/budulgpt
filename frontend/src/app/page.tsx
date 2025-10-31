@@ -140,7 +140,7 @@ export default function HomePage() {
                 className="group bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-10 py-5 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
               >
                 <DollarSign className="w-6 h-6" />
-                <span>Subscribe $9.99/month</span>
+                <span>Subscribe $4.99/month - Unlimited</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
@@ -254,8 +254,8 @@ export default function HomePage() {
                 <div className="text-madina-green-100 font-medium">Goes to Masjid Madina</div>
               </div>
               <div>
-                <div className="text-5xl font-bold mb-2">$9.99</div>
-                <div className="text-madina-green-100 font-medium">Per Month Subscription</div>
+                <div className="text-5xl font-bold mb-2">$4.99</div>
+                <div className="text-madina-green-100 font-medium">Per Month - Unlimited</div>
               </div>
               <div>
                 <div className="text-5xl font-bold mb-2">100%</div>
@@ -281,7 +281,7 @@ export default function HomePage() {
               href="/subscribe"
               className="bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
             >
-              <span>Subscribe Now - $9.99/mo</span>
+              <span>Subscribe Now - $4.99/mo Unlimited</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link

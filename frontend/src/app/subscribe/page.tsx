@@ -71,16 +71,19 @@ export default function SubscribePage() {
                 {/* Price */}
                 <div className="mb-8">
                   <div className="flex items-baseline justify-center mb-4">
-                    <span className="text-6xl font-bold text-madina-green-600">$9.99</span>
+                    <span className="text-6xl font-bold text-madina-green-600">$4.99</span>
                     <span className="text-2xl text-slate-600 ml-2">/month</span>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center mb-2">
                     <div className="inline-flex items-center space-x-2 bg-madina-green-50 px-4 py-2 rounded-full">
                       <Heart className="w-4 h-4 text-red-500" />
                       <span className="text-sm font-semibold text-madina-green-700">
-                        $5.00 goes directly to Masjid Madina
+                        $2.50 goes directly to Masjid Madina
                       </span>
                     </div>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-xs text-slate-500 font-medium">Unlimited Access to All Features</span>
                   </div>
                 </div>
 
@@ -166,7 +169,7 @@ export default function SubscribePage() {
                     <span>Your Impact</span>
                   </h4>
                   <p className="text-sm text-madina-green-700 leading-relaxed">
-                    Every month, <strong>$5.00 of your $9.99 subscription</strong> goes directly to Masjid Madina to support:
+                    Every month, <strong>$2.50 of your $4.99 subscription</strong> goes directly to Masjid Madina to support:
                   </p>
                   <ul className="mt-3 space-y-2 text-sm text-madina-green-700">
                     <li className="flex items-center space-x-2">
