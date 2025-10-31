@@ -206,9 +206,9 @@ export default function AboutPage() {
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 text-white text-2xl">
                 🕋
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Umrah Alert</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Umrah Deal Finder</h3>
               <p className="text-slate-600 text-sm">
-                Coming soon - AI-powered Umrah planning and guidance
+                AI-powered Umrah deal finder with price alerts and notifications
               </p>
             </div>
           </div>

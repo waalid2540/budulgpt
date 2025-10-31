@@ -37,10 +37,10 @@ export default function HomePage() {
     },
     {
       icon: <MapPin className="w-8 h-8" />,
-      title: "Umrah Alert",
-      description: "Coming soon - AI Umrah planning",
+      title: "Umrah Deal Finder",
+      description: "Find best Umrah deals with AI-powered alerts",
       gradient: "from-blue-500 to-indigo-600",
-      link: "#"
+      link: "/umrah-deals"
     }
   ]
 
@@ -333,7 +333,7 @@ export default function HomePage() {
                 <li><Link href="/chat" className="hover:text-madina-green-400 transition-colors">Madina GPT</Link></li>
                 <li><Link href="/duas" className="hover:text-madina-green-400 transition-colors">Du'ā Generator</Link></li>
                 <li><Link href="/stories" className="hover:text-madina-green-400 transition-colors">Kids Stories</Link></li>
-                <li><Link href="#" className="hover:text-madina-green-400 transition-colors">Umrah Alert (Soon)</Link></li>
+                <li><Link href="/umrah-deals" className="hover:text-madina-green-400 transition-colors">Umrah Deal Finder</Link></li>
               </ul>
             </div>
 
