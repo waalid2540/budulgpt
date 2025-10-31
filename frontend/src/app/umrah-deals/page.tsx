@@ -2,33 +2,60 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, MapPin, Calendar, DollarSign, Star, Hotel, Bell, Heart, ExternalLink, Loader2 } from 'lucide-react'
+import { Search, MapPin, Calendar, DollarSign, Star, Hotel, Bell, Heart, ExternalLink, Loader2, Plane, Package, ArrowRight, Mail, MessageCircle, Smartphone } from 'lucide-react'
+
+type SearchType = 'hotels' | 'flights' | 'packages'
 
 interface UmrahDeal {
-  hotel_name: string
-  hotel_rating: number
+  hotel_name?: string
+  flight_airline?: string
+  hotel_rating?: number
   price: number
   currency: string
   location: string
-  distance_from_haram: number
-  amenities: string[]
+  distance_from_haram?: number
+  amenities?: string[]
   booking_url: string
   provider: string
+  departure_city?: string
+  arrival_city?: string
+  flight_class?: string
+  stops?: number
+  deal_type: 'hotel' | 'flight' | 'package'
 }
 
 export default function UmrahDealsPage() {
-  const [destination, setDestination] = useState('Makkah')
-  const [budgetMax, setBudgetMax] = useState(500)
+  const [searchType, setSearchType] = useState<SearchType>('packages')
+
+  // Common fields
+  const [destination, setDestination] = useState('Both')
+  const [budgetMax, setBudgetMax] = useState(2000)
   const [checkInDate, setCheckInDate] = useState('')
   const [checkOutDate, setCheckOutDate] = useState('')
+  const [durationNights, setDurationNights] = useState(7)
+
+  // Hotel-specific fields
   const [hotelRating, setHotelRating] = useState(3)
   const [distanceFromHaram, setDistanceFromHaram] = useState(2)
-  const [durationNights, setDurationNights] = useState(7)
+
+  // Flight-specific fields
+  const [departureCity, setDepartureCity] = useState('')
+  const [flightClass, setFlightClass] = useState('economy')
+  const [directFlightsOnly, setDirectFlightsOnly] = useState(false)
 
   const [deals, setDeals] = useState<UmrahDeal[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false)
+  const [showAlertInfo, setShowAlertInfo] = useState(true)
   const [searchPerformed, setSearchPerformed] = useState(false)
+
+  // Save search modal state
+  const [searchName, setSearchName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+  const [alertEmail, setAlertEmail] = useState(true)
+  const [alertWhatsApp, setAlertWhatsApp] = useState(false)
+  const [alertSMS, setAlertSMS] = useState(false)
 
   const handleSearch = async () => {
     setIsSearching(true)
@@ -39,13 +66,17 @@ export default function UmrahDealsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          search_type: searchType,
           destination,
           budget_max: budgetMax,
           check_in_date: checkInDate,
           check_out_date: checkOutDate,
           hotel_rating: hotelRating,
           distance_from_haram: distanceFromHaram,
-          duration_nights: durationNights
+          duration_nights: durationNights,
+          departure_city: departureCity,
+          flight_class: flightClass,
+          direct_flights_only: directFlightsOnly
         })
       })
 
@@ -53,7 +84,6 @@ export default function UmrahDealsPage() {
       setDeals(data.deals || [])
     } catch (error) {
       console.error('Search error:', error)
-      // Load mock data for demo
       loadMockDeals()
     } finally {
       setIsSearching(false)
@@ -61,85 +91,155 @@ export default function UmrahDealsPage() {
   }
 
   const loadMockDeals = () => {
-    const mockDeals: UmrahDeal[] = [
-      {
-        hotel_name: 'Makkah Clock Royal Tower',
-        hotel_rating: 5,
-        price: 450,
-        currency: 'USD',
-        location: 'Adjacent to Masjid al-Haram',
-        distance_from_haram: 0.1,
-        amenities: ['WiFi', 'Breakfast', 'Haram View', 'Pool', 'Spa'],
-        booking_url: 'https://booking.com',
-        provider: 'Booking.com'
-      },
-      {
-        hotel_name: 'Swissotel Makkah',
-        hotel_rating: 5,
-        price: 380,
-        currency: 'USD',
-        location: '200m from Masjid al-Haram',
-        distance_from_haram: 0.2,
-        amenities: ['WiFi', 'Breakfast', 'Spa', 'Restaurant', '24/7 Service'],
-        booking_url: 'https://expedia.com',
-        provider: 'Expedia'
-      },
-      {
-        hotel_name: 'Dar Al Eiman Royal',
-        hotel_rating: 4,
-        price: 280,
-        currency: 'USD',
-        location: '500m from Masjid al-Haram',
-        distance_from_haram: 0.5,
-        amenities: ['WiFi', 'Breakfast', 'Shuttle', 'Restaurant'],
-        booking_url: 'https://hotels.com',
-        provider: 'Hotels.com'
-      },
-      {
-        hotel_name: 'Hilton Suites Makkah',
-        hotel_rating: 5,
-        price: 420,
-        currency: 'USD',
-        location: '300m from Masjid al-Haram',
-        distance_from_haram: 0.3,
-        amenities: ['WiFi', 'Breakfast', 'Gym', 'Pool', 'Business Center'],
-        booking_url: 'https://hilton.com',
-        provider: 'Hilton.com'
-      },
-      {
-        hotel_name: 'Anjum Hotel Makkah',
-        hotel_rating: 4,
-        price: 320,
-        currency: 'USD',
-        location: '600m from Masjid al-Haram',
-        distance_from_haram: 0.6,
-        amenities: ['WiFi', 'Breakfast', 'Shuttle', 'Laundry'],
-        booking_url: 'https://agoda.com',
-        provider: 'Agoda'
-      }
-    ]
+    const mockDeals: UmrahDeal[] = []
 
-    setDeals(mockDeals.filter(deal =>
-      deal.price <= budgetMax &&
-      deal.hotel_rating >= hotelRating &&
-      deal.distance_from_haram <= distanceFromHaram
-    ))
+    if (searchType === 'hotels' || searchType === 'packages') {
+      mockDeals.push(
+        {
+          hotel_name: 'Makkah Clock Royal Tower',
+          hotel_rating: 5,
+          price: searchType === 'packages' ? 1850 : 450,
+          currency: 'USD',
+          location: 'Adjacent to Masjid al-Haram',
+          distance_from_haram: 0.1,
+          amenities: ['WiFi', 'Breakfast', 'Haram View', 'Pool', 'Spa'],
+          booking_url: 'https://booking.com',
+          provider: 'Booking.com',
+          deal_type: searchType as 'hotel' | 'package'
+        },
+        {
+          hotel_name: 'Swissotel Makkah',
+          hotel_rating: 5,
+          price: searchType === 'packages' ? 1680 : 380,
+          currency: 'USD',
+          location: '200m from Masjid al-Haram',
+          distance_from_haram: 0.2,
+          amenities: ['WiFi', 'Breakfast', 'Spa', 'Restaurant'],
+          booking_url: 'https://expedia.com',
+          provider: 'Expedia',
+          deal_type: searchType as 'hotel' | 'package'
+        },
+        {
+          hotel_name: 'Dar Al Eiman Royal',
+          hotel_rating: 4,
+          price: searchType === 'packages' ? 1480 : 280,
+          currency: 'USD',
+          location: '500m from Masjid al-Haram',
+          distance_from_haram: 0.5,
+          amenities: ['WiFi', 'Breakfast', 'Shuttle'],
+          booking_url: 'https://hotels.com',
+          provider: 'Hotels.com',
+          deal_type: searchType as 'hotel' | 'package'
+        }
+      )
+    }
+
+    if (searchType === 'flights' || searchType === 'packages') {
+      mockDeals.push(
+        {
+          flight_airline: 'Saudi Airlines',
+          price: searchType === 'packages' ? 1850 : 850,
+          currency: 'USD',
+          location: 'Jeddah (JED)',
+          departure_city: departureCity || 'New York (JFK)',
+          arrival_city: 'Jeddah (JED)',
+          flight_class: flightClass,
+          stops: 0,
+          booking_url: 'https://saudia.com',
+          provider: 'Saudi Airlines',
+          deal_type: searchType === 'flights' ? 'flight' : 'package'
+        },
+        {
+          flight_airline: 'Emirates',
+          price: searchType === 'packages' ? 1680 : 920,
+          currency: 'USD',
+          location: 'Jeddah (JED)',
+          departure_city: departureCity || 'New York (JFK)',
+          arrival_city: 'Jeddah (JED)',
+          flight_class: flightClass,
+          stops: 1,
+          booking_url: 'https://emirates.com',
+          provider: 'Emirates',
+          deal_type: searchType === 'flights' ? 'flight' : 'package'
+        },
+        {
+          flight_airline: 'Qatar Airways',
+          price: searchType === 'packages' ? 1750 : 890,
+          currency: 'USD',
+          location: 'Jeddah (JED)',
+          departure_city: departureCity || 'New York (JFK)',
+          arrival_city: 'Jeddah (JED)',
+          flight_class: flightClass,
+          stops: 1,
+          booking_url: 'https://qatarairways.com',
+          provider: 'Qatar Airways',
+          deal_type: searchType === 'flights' ? 'flight' : 'package'
+        }
+      )
+    }
+
+    setDeals(mockDeals)
+  }
+
+  const handleSaveSearch = async () => {
+    if (!searchName || !userEmail) {
+      alert('Please enter a search name and your email address')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/v1/umrah-deals/save-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          search_criteria: {
+            search_type: searchType,
+            destination,
+            budget_max: budgetMax,
+            check_in_date: checkInDate,
+            check_out_date: checkOutDate,
+            hotel_rating: hotelRating,
+            distance_from_haram: distanceFromHaram,
+            duration_nights: durationNights,
+            departure_city: departureCity,
+            flight_class: flightClass
+          },
+          search_name: searchName,
+          alert_enabled: true,
+          alert_email: alertEmail,
+          alert_whatsapp: alertWhatsApp,
+          alert_sms: alertSMS,
+          user_email: userEmail,
+          user_phone: userPhone
+        })
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        alert('Search saved successfully! You will receive alerts when prices drop.')
+        setShowSaveModal(false)
+        setSearchName('')
+      }
+    } catch (error) {
+      console.error('Save search error:', error)
+      alert('Failed to save search. Please try again.')
+    }
   }
 
   return (
     <div className="min-h-screen bg-madina-gradient relative overflow-hidden">
-      {/* Background */}
+      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-madina-green-400/20 to-madina-green-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-madina-gold-400/20 to-madina-gold-500/20 rounded-full blur-3xl animate-pulse"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-madina-green-100 shadow-madina-lg">
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-madina-green-100 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-xl flex items-center justify-center shadow-madina">
+              <div className="w-10 h-10 bg-gradient-to-br from-madina-green-500 to-madina-green-600 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">م</span>
               </div>
               <div>
@@ -148,378 +248,617 @@ export default function UmrahDealsPage() {
                 </h1>
               </div>
             </Link>
-            <Link href="/" className="text-slate-700 hover:text-madina-green-600 font-medium">
-              Back to Home
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/umrah-deals/dashboard"
+                className="flex items-center space-x-2 text-slate-700 hover:text-madina-green-600 font-medium transition-colors"
+              >
+                <Bell className="w-4 h-4" />
+                <span>My Alerts</span>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <div className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-xl rounded-full px-6 py-3 mb-6 border border-madina-green-200 shadow-madina-lg">
-              <MapPin className="w-5 h-5 text-madina-green-600" />
-              <span className="text-madina-green-700 font-semibold">Live Umrah Deal Finder</span>
+            <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-xl rounded-full px-6 py-3 mb-6 border border-madina-green-200 shadow-lg">
+              <span className="text-2xl">🕋</span>
+              <span className="text-madina-green-700 font-semibold">AI-Powered Umrah Deal Finder</span>
             </div>
-
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               <span className="bg-gradient-to-r from-madina-green-600 to-madina-green-500 bg-clip-text text-transparent">
-                Find Your Perfect
+                Find Best Umrah Deals
               </span>
-              <br />
-              <span className="text-slate-800">Umrah Deal</span>
             </h1>
-
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              AI-powered search across 100+ booking sites. Find the best Umrah hotels at the best prices, instantly.
+              Search hotels, flights, and complete packages for your Umrah journey. Get instant alerts when prices drop!
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Search Form */}
-            <div className="lg:col-span-1">
-              <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 border border-white/50 shadow-madina-xl sticky top-24">
-                <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center space-x-2">
-                  <Search className="w-6 h-6 text-madina-green-600" />
-                  <span>Search Filters</span>
-                </h2>
+          {/* Alert Info Banner */}
+          {showAlertInfo && (
+            <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-4 flex-1">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Bell className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-slate-800 mb-2">
+                      💡 Never Miss a Deal - Set Up Price Alerts!
+                    </h3>
+                    <p className="text-slate-600 mb-4">
+                      Save your search and we'll notify you via <strong>Email, WhatsApp, or SMS</strong> when prices drop or new deals become available. Our AI checks prices every 6 hours!
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
+                        <Mail className="w-4 h-4 text-madina-green-500" />
+                        <span className="text-sm font-medium text-slate-700">Email Alerts</span>
+                      </div>
+                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
+                        <MessageCircle className="w-4 h-4 text-green-500" />
+                        <span className="text-sm font-medium text-slate-700">WhatsApp Alerts</span>
+                      </div>
+                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
+                        <Smartphone className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm font-medium text-slate-700">SMS Alerts</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAlertInfo(false)}
+                  className="text-slate-400 hover:text-slate-600 ml-4"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
 
-                <div className="space-y-6">
-                  {/* Destination */}
+          {/* Search Type Tabs */}
+          <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-2 border border-white/50 shadow-xl mb-8 max-w-2xl mx-auto">
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => setSearchType('packages')}
+                className={`flex items-center justify-center space-x-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  searchType === 'packages'
+                    ? 'bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Package className="w-5 h-5" />
+                <span>Packages</span>
+              </button>
+              <button
+                onClick={() => setSearchType('hotels')}
+                className={`flex items-center justify-center space-x-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  searchType === 'hotels'
+                    ? 'bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Hotel className="w-5 h-5" />
+                <span>Hotels</span>
+              </button>
+              <button
+                onClick={() => setSearchType('flights')}
+                className={`flex items-center justify-center space-x-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  searchType === 'flights'
+                    ? 'bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Plane className="w-5 h-5" />
+                <span>Flights</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Search Form */}
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 border border-white/50 shadow-xl mb-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Destination */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-madina-green-500" />
+                  <span>Destination</span>
+                </label>
+                <select
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none bg-white"
+                >
+                  <option value="Makkah">Makkah</option>
+                  <option value="Madinah">Madinah</option>
+                  <option value="Both">Makkah & Madinah</option>
+                </select>
+              </div>
+
+              {/* Check-in Date */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center space-x-2">
+                  <Calendar className="w-4 h-4 text-madina-green-500" />
+                  <span>Check-in Date</span>
+                </label>
+                <input
+                  type="date"
+                  value={checkInDate}
+                  onChange={(e) => setCheckInDate(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none bg-white"
+                />
+              </div>
+
+              {/* Check-out Date */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center space-x-2">
+                  <Calendar className="w-4 h-4 text-madina-green-500" />
+                  <span>Check-out Date</span>
+                </label>
+                <input
+                  type="date"
+                  value={checkOutDate}
+                  onChange={(e) => setCheckOutDate(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none bg-white"
+                />
+              </div>
+
+              {/* Budget */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <DollarSign className="w-4 h-4 text-madina-green-500" />
+                    <span>Max Budget</span>
+                  </div>
+                  <span className="text-madina-green-600 font-bold">${budgetMax}</span>
+                </label>
+                <input
+                  type="range"
+                  min={searchType === 'packages' ? 500 : searchType === 'flights' ? 400 : 100}
+                  max={searchType === 'packages' ? 5000 : searchType === 'flights' ? 3000 : 2000}
+                  step="50"
+                  value={budgetMax}
+                  onChange={(e) => setBudgetMax(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-madina-green-500"
+                />
+                <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <span>${searchType === 'packages' ? '500' : searchType === 'flights' ? '400' : '100'}</span>
+                  <span>${searchType === 'packages' ? '5000' : searchType === 'flights' ? '3000' : '2000'}</span>
+                </div>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center justify-between">
+                  <span>Duration</span>
+                  <span className="text-madina-green-600 font-bold">{durationNights} nights</span>
+                </label>
+                <input
+                  type="range"
+                  min="3"
+                  max="30"
+                  step="1"
+                  value={durationNights}
+                  onChange={(e) => setDurationNights(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-madina-green-500"
+                />
+                <div className="flex justify-between text-xs text-slate-500 mt-1">
+                  <span>3 nights</span>
+                  <span>30 nights</span>
+                </div>
+              </div>
+
+              {/* Hotel-specific fields */}
+              {(searchType === 'hotels' || searchType === 'packages') && (
+                <>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      <MapPin className="w-4 h-4 inline mr-1" />
-                      Destination
+                    <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-madina-green-500" />
+                        <span>Hotel Rating</span>
+                      </div>
+                      <span className="text-madina-green-600 font-bold">{hotelRating}+ stars</span>
+                    </label>
+                    <input
+                      type="range"
+                      min="3"
+                      max="5"
+                      step="1"
+                      value={hotelRating}
+                      onChange={(e) => setHotelRating(parseInt(e.target.value))}
+                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-madina-green-500"
+                    />
+                    <div className="flex justify-between text-xs text-slate-500 mt-1">
+                      <span>3 stars</span>
+                      <span>5 stars</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center justify-between">
+                      <span>Distance from Haram</span>
+                      <span className="text-madina-green-600 font-bold">{distanceFromHaram} km</span>
+                    </label>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="5"
+                      step="0.1"
+                      value={distanceFromHaram}
+                      onChange={(e) => setDistanceFromHaram(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-madina-green-500"
+                    />
+                    <div className="flex justify-between text-xs text-slate-500 mt-1">
+                      <span>0.1 km</span>
+                      <span>5 km</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Flight-specific fields */}
+              {(searchType === 'flights' || searchType === 'packages') && (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-3 flex items-center space-x-2">
+                      <Plane className="w-4 h-4 text-madina-green-500" />
+                      <span>Departure City</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={departureCity}
+                      onChange={(e) => setDepartureCity(e.target.value)}
+                      placeholder="e.g., New York, London, Toronto"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-3">
+                      Flight Class
                     </label>
                     <select
-                      value={destination}
-                      onChange={(e) => setDestination(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-madina-green-200 focus:ring-2 focus:ring-madina-green-500 focus:border-transparent"
+                      value={flightClass}
+                      onChange={(e) => setFlightClass(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none bg-white"
                     >
-                      <option value="Makkah">Makkah</option>
-                      <option value="Madinah">Madinah</option>
-                      <option value="Both">Makkah & Madinah</option>
+                      <option value="economy">Economy</option>
+                      <option value="premium_economy">Premium Economy</option>
+                      <option value="business">Business</option>
+                      <option value="first">First Class</option>
                     </select>
                   </div>
 
-                  {/* Budget */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      <DollarSign className="w-4 h-4 inline mr-1" />
-                      Max Budget (per night)
-                    </label>
+                  <div className="flex items-center space-x-3 pt-8">
                     <input
-                      type="range"
-                      min="100"
-                      max="1000"
-                      step="50"
-                      value={budgetMax}
-                      onChange={(e) => setBudgetMax(parseInt(e.target.value))}
-                      className="w-full"
+                      type="checkbox"
+                      id="directFlights"
+                      checked={directFlightsOnly}
+                      onChange={(e) => setDirectFlightsOnly(e.target.checked)}
+                      className="w-5 h-5 text-madina-green-500 border-slate-300 rounded focus:ring-madina-green-500"
                     />
-                    <div className="text-center text-madina-green-600 font-bold text-lg mt-2">
-                      ${budgetMax}
-                    </div>
-                  </div>
-
-                  {/* Dates */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      <Calendar className="w-4 h-4 inline mr-1" />
-                      Check-in Date
+                    <label htmlFor="directFlights" className="text-sm font-semibold text-slate-700 cursor-pointer">
+                      Direct flights only
                     </label>
-                    <input
-                      type="date"
-                      value={checkInDate}
-                      onChange={(e) => setCheckInDate(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-madina-green-200 focus:ring-2 focus:ring-madina-green-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      Duration (nights)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="30"
-                      value={durationNights}
-                      onChange={(e) => setDurationNights(parseInt(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl border border-madina-green-200 focus:ring-2 focus:ring-madina-green-500"
-                    />
-                  </div>
-
-                  {/* Hotel Rating */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      <Star className="w-4 h-4 inline mr-1" />
-                      Minimum Rating
-                    </label>
-                    <div className="flex space-x-2">
-                      {[3, 4, 5].map((rating) => (
-                        <button
-                          key={rating}
-                          onClick={() => setHotelRating(rating)}
-                          className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                            hotelRating === rating
-                              ? 'bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white'
-                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                          }`}
-                        >
-                          {rating}★
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Distance from Haram */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      <Hotel className="w-4 h-4 inline mr-1" />
-                      Max Distance from Haram
-                    </label>
-                    <input
-                      type="range"
-                      min="0.5"
-                      max="5"
-                      step="0.5"
-                      value={distanceFromHaram}
-                      onChange={(e) => setDistanceFromHaram(parseFloat(e.target.value))}
-                      className="w-full"
-                    />
-                    <div className="text-center text-madina-green-600 font-bold mt-2">
-                      {distanceFromHaram} km
-                    </div>
-                  </div>
-
-                  {/* Search Button */}
-                  <button
-                    onClick={handleSearch}
-                    disabled={isSearching}
-                    className="w-full bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                  >
-                    {isSearching ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Searching...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Search className="w-5 h-5" />
-                        <span>Search Deals Now</span>
-                      </>
-                    )}
-                  </button>
-
-                  {/* Save Search Button */}
-                  {deals.length > 0 && (
-                    <button
-                      onClick={() => setShowSaveModal(true)}
-                      className="w-full bg-white border-2 border-madina-green-500 text-madina-green-600 py-3 rounded-xl font-semibold hover:bg-madina-green-50 transition-all flex items-center justify-center space-x-2"
-                    >
-                      <Bell className="w-5 h-5" />
-                      <span>Save & Get Alerts</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Results */}
-            <div className="lg:col-span-2">
-              {!searchPerformed ? (
-                <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-12 border border-white/50 text-center">
-                  <MapPin className="w-16 h-16 text-madina-green-400 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-slate-800 mb-4">
-                    Ready to Find Your Umrah Deal?
-                  </h3>
-                  <p className="text-slate-600">
-                    Set your preferences in the search form and click "Search Deals Now" to find the best Umrah hotels
-                  </p>
-                </div>
-              ) : isSearching ? (
-                <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-12 border border-white/50 text-center">
-                  <Loader2 className="w-16 h-16 text-madina-green-500 animate-spin mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-slate-800 mb-4">
-                    Searching Across 100+ Sites...
-                  </h3>
-                  <p className="text-slate-600">
-                    Finding the best Umrah deals for you
-                  </p>
-                </div>
-              ) : deals.length === 0 ? (
-                <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-12 border border-white/50 text-center">
-                  <Search className="w-16 h-16 text-slate-400 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-slate-800 mb-4">
-                    No Deals Found
-                  </h3>
-                  <p className="text-slate-600 mb-6">
-                    Try adjusting your filters (budget, distance, or rating) to see more results
-                  </p>
-                  <button
-                    onClick={() => {
-                      setBudgetMax(1000)
-                      setDistanceFromHaram(5)
-                      setHotelRating(3)
-                    }}
-                    className="bg-madina-green-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-madina-green-600"
-                  >
-                    Reset Filters
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="mb-6 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-slate-800">
-                      Found {deals.length} Hotel{deals.length !== 1 ? 's' : ''}
-                    </h2>
-                    <span className="text-slate-600">
-                      Sorted by price
-                    </span>
-                  </div>
-
-                  <div className="space-y-6">
-                    {deals.map((deal, index) => (
-                      <div
-                        key={index}
-                        className="bg-white/60 backdrop-blur-xl rounded-3xl p-6 border border-white/50 shadow-madina-xl hover:shadow-2xl transition-all duration-300"
-                      >
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                          <div className="flex-1 mb-4 md:mb-0">
-                            <h3 className="text-2xl font-bold text-slate-800 mb-2">
-                              {deal.hotel_name}
-                            </h3>
-
-                            <div className="flex items-center space-x-4 mb-3">
-                              <div className="flex items-center space-x-1 text-madina-gold-400">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-4 h-4 ${i < deal.hotel_rating ? 'fill-current' : ''}`}
-                                  />
-                                ))}
-                                <span className="text-slate-600 text-sm ml-1">
-                                  ({deal.hotel_rating})
-                                </span>
-                              </div>
-
-                              <div className="flex items-center space-x-1 text-madina-green-600">
-                                <MapPin className="w-4 h-4" />
-                                <span className="text-sm font-medium">
-                                  {deal.distance_from_haram} km from Haram
-                                </span>
-                              </div>
-                            </div>
-
-                            <p className="text-slate-600 mb-3">
-                              {deal.location}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2">
-                              {deal.amenities.slice(0, 4).map((amenity, i) => (
-                                <span
-                                  key={i}
-                                  className="px-3 py-1 bg-madina-green-50 text-madina-green-700 rounded-full text-xs font-medium"
-                                >
-                                  {amenity}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="md:text-right">
-                            <div className="mb-4">
-                              <div className="text-4xl font-bold text-madina-green-600">
-                                ${deal.price}
-                              </div>
-                              <div className="text-slate-500 text-sm">
-                                per night
-                              </div>
-                              <div className="text-xs text-slate-400 mt-1">
-                                via {deal.provider}
-                              </div>
-                            </div>
-
-                            <a
-                              href={deal.booking_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center space-x-2 bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
-                            >
-                              <span>Book Now</span>
-                              <ExternalLink className="w-4 h-4" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </>
               )}
             </div>
+
+            {/* Search Button */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={handleSearch}
+                disabled={isSearching}
+                className="flex-1 bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSearching ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    <span>Searching...</span>
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-6 h-6" />
+                    <span>Search Deals</span>
+                  </>
+                )}
+              </button>
+
+              {searchPerformed && deals.length > 0 && (
+                <button
+                  onClick={() => setShowSaveModal(true)}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
+                >
+                  <Bell className="w-6 h-6" />
+                  <span>Save & Set Alerts</span>
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Results */}
+          {searchPerformed && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-slate-800">
+                  {deals.length} {searchType} found
+                </h2>
+                {deals.length > 0 && (
+                  <button
+                    onClick={() => setShowSaveModal(true)}
+                    className="flex items-center space-x-2 text-madina-green-600 hover:text-madina-green-700 font-semibold"
+                  >
+                    <Bell className="w-5 h-5" />
+                    <span>Save this search & get alerts</span>
+                  </button>
+                )}
+              </div>
+
+              {deals.length === 0 ? (
+                <div className="text-center py-20 bg-white/40 backdrop-blur-xl rounded-3xl">
+                  <div className="w-20 h-20 bg-gradient-to-br from-madina-green-100 to-madina-green-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Search className="w-10 h-10 text-madina-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-4">No deals found</h3>
+                  <p className="text-slate-600 mb-6">Try adjusting your search criteria</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {deals.map((deal, index) => (
+                    <div
+                      key={index}
+                      className="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      {/* Deal Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-slate-800 mb-2">
+                            {deal.hotel_name || deal.flight_airline}
+                          </h3>
+                          {deal.hotel_rating && (
+                            <div className="flex items-center space-x-1 mb-2">
+                              {[...Array(Math.floor(deal.hotel_rating))].map((_, i) => (
+                                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                          )}
+                          <p className="text-sm text-slate-600">{deal.location}</p>
+                        </div>
+                        <div className="flex-shrink-0 ml-4">
+                          <div className="bg-gradient-to-br from-madina-green-500 to-madina-green-600 text-white px-4 py-2 rounded-xl text-center">
+                            <div className="text-2xl font-bold">${deal.price}</div>
+                            <div className="text-xs">
+                              {searchType === 'packages' ? 'total' : searchType === 'flights' ? 'roundtrip' : 'per night'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Deal Details */}
+                      <div className="space-y-2 mb-4">
+                        {deal.distance_from_haram !== undefined && (
+                          <div className="flex items-center space-x-2 text-sm text-slate-600">
+                            <MapPin className="w-4 h-4 text-madina-green-500" />
+                            <span>{deal.distance_from_haram} km from Haram</span>
+                          </div>
+                        )}
+
+                        {deal.departure_city && (
+                          <div className="flex items-center space-x-2 text-sm text-slate-600">
+                            <Plane className="w-4 h-4 text-madina-green-500" />
+                            <span>{deal.departure_city} → {deal.arrival_city}</span>
+                          </div>
+                        )}
+
+                        {deal.stops !== undefined && (
+                          <div className="text-sm text-slate-600">
+                            {deal.stops === 0 ? '✓ Direct flight' : `${deal.stops} stop(s)`}
+                          </div>
+                        )}
+
+                        {deal.flight_class && (
+                          <div className="text-sm text-slate-600 capitalize">
+                            {deal.flight_class.replace('_', ' ')} class
+                          </div>
+                        )}
+
+                        {deal.amenities && deal.amenities.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-3">
+                            {deal.amenities.slice(0, 3).map((amenity, i) => (
+                              <span
+                                key={i}
+                                className="bg-madina-green-50 text-madina-green-700 px-3 py-1 rounded-lg text-xs font-medium"
+                              >
+                                {amenity}
+                              </span>
+                            ))}
+                            {deal.amenities.length > 3 && (
+                              <span className="text-xs text-slate-500">
+                                +{deal.amenities.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Provider & CTA */}
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                        <span className="text-sm text-slate-500">via {deal.provider}</span>
+                        <a
+                          href={deal.booking_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-2 bg-madina-green-500 hover:bg-madina-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                        >
+                          <span>Book Now</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Save Search Modal */}
       {showSaveModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold text-slate-800 mb-4">
-              Save Search & Get Alerts
-            </h3>
-            <p className="text-slate-600 mb-6">
-              Get notified when prices drop or new deals match your criteria
-            </p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl transform transition-all">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl font-bold text-slate-800 flex items-center space-x-3">
+                <Bell className="w-8 h-8 text-madina-green-500" />
+                <span>Save Search & Set Alerts</span>
+              </h3>
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4 mb-6">
+              <p className="text-sm text-slate-700">
+                <strong>🔔 How it works:</strong> We'll monitor prices for your search criteria and notify you instantly when:
+              </p>
+              <ul className="mt-2 space-y-1 text-sm text-slate-600 ml-4">
+                <li>• Prices drop by 10% or more</li>
+                <li>• New deals matching your criteria appear</li>
+                <li>• Limited-time offers become available</li>
+              </ul>
+            </div>
 
             <div className="space-y-4 mb-6">
-              <input
-                type="text"
-                placeholder="Name this search (e.g., 'Makkah 5-star')"
-                className="w-full px-4 py-3 rounded-xl border border-madina-green-200 focus:ring-2 focus:ring-madina-green-500"
-              />
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Search Name
+                </label>
+                <input
+                  type="text"
+                  value={searchName}
+                  onChange={(e) => setSearchName(e.target.value)}
+                  placeholder="e.g., Ramadan Umrah 2024"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
+                />
+              </div>
 
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full px-4 py-3 rounded-xl border border-madina-green-200 focus:ring-2 focus:ring-madina-green-500"
-              />
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  placeholder="your.email@example.com"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
+                />
+              </div>
 
-              <div className="space-y-2">
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" defaultChecked className="w-5 h-5 text-madina-green-500" />
-                  <span>Email alerts</span>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Phone Number (optional, for WhatsApp/SMS)
                 </label>
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" className="w-5 h-5 text-madina-green-500" />
-                  <span>WhatsApp alerts</span>
+                <input
+                  type="tel"
+                  value={userPhone}
+                  onChange={(e) => setUserPhone(e.target.value)}
+                  placeholder="+1 234 567 8900"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
+                  Notification Channels
                 </label>
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" className="w-5 h-5 text-madina-green-500" />
-                  <span>SMS alerts</span>
-                </label>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <Mail className="w-5 h-5 text-madina-green-500" />
+                      <div>
+                        <div className="font-semibold text-slate-800">Email Notifications</div>
+                        <div className="text-xs text-slate-500">Get instant email alerts</div>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={alertEmail}
+                        onChange={(e) => setAlertEmail(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-madina-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-madina-green-500"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <MessageCircle className="w-5 h-5 text-green-500" />
+                      <div>
+                        <div className="font-semibold text-slate-800">WhatsApp Alerts</div>
+                        <div className="text-xs text-slate-500">Receive alerts on WhatsApp</div>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={alertWhatsApp}
+                        onChange={(e) => setAlertWhatsApp(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center space-x-3">
+                      <Smartphone className="w-5 h-5 text-blue-500" />
+                      <div>
+                        <div className="font-semibold text-slate-800">SMS Notifications</div>
+                        <div className="text-xs text-slate-500">Get text message alerts</div>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={alertSMS}
+                        onChange={(e) => setAlertSMS(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowSaveModal(false)}
-                className="flex-1 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200"
+                className="flex-1 px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  setShowSaveModal(false)
-                  alert('Search saved! You will receive alerts every 6 hours.')
-                }}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white rounded-xl font-semibold hover:shadow-lg"
+                onClick={handleSaveSearch}
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
               >
-                Save & Enable Alerts
+                <Bell className="w-5 h-5" />
+                <span>Save & Enable Alerts</span>
               </button>
             </div>
           </div>

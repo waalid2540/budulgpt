@@ -20,14 +20,20 @@ PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions"
 
 class UmrahSearchRequest(BaseModel):
     """Request model for Umrah deal search"""
+    search_type: str = "packages"  # "hotels", "flights", "packages"
     destination: str  # "Makkah", "Madinah", "Both"
     budget_min: Optional[float] = 0
     budget_max: float
     check_in_date: Optional[str] = None
     check_out_date: Optional[str] = None
     duration_nights: Optional[int] = 7
+    # Hotel-specific fields
     hotel_rating: Optional[int] = 3  # 3, 4, or 5 stars
     distance_from_haram: Optional[float] = 2.0  # km
+    # Flight-specific fields
+    departure_city: Optional[str] = None
+    flight_class: Optional[str] = "economy"
+    direct_flights_only: Optional[bool] = False
 
 
 class SavedSearchRequest(BaseModel):
@@ -44,17 +50,26 @@ class SavedSearchRequest(BaseModel):
 
 class UmrahDeal(BaseModel):
     """Response model for a single deal"""
-    hotel_name: str
-    hotel_rating: Optional[float]
+    deal_type: str  # "hotel", "flight", "package"
     price: float
     currency: str = "USD"
     location: str
-    distance_from_haram: Optional[float]
-    amenities: List[str] = []
     booking_url: Optional[str]
     provider: Optional[str]
-    available_from: Optional[str]
-    available_to: Optional[str]
+    # Hotel fields
+    hotel_name: Optional[str] = None
+    hotel_rating: Optional[float] = None
+    distance_from_haram: Optional[float] = None
+    amenities: List[str] = []
+    # Flight fields
+    flight_airline: Optional[str] = None
+    departure_city: Optional[str] = None
+    arrival_city: Optional[str] = None
+    flight_class: Optional[str] = None
+    stops: Optional[int] = None
+    # Common fields
+    available_from: Optional[str] = None
+    available_to: Optional[str] = None
 
 
 class SearchResponse(BaseModel):
@@ -174,76 +189,139 @@ Format as JSON array with these exact fields: hotel_name, rating, price, distanc
 def get_mock_deals(search_params: UmrahSearchRequest) -> List[dict]:
     """Return mock deals for testing when API is not available"""
     destination = search_params.destination
+    search_type = search_params.search_type
 
     mock_deals = []
 
-    if destination in ["Makkah", "Both"]:
-        mock_deals.extend([
+    # Hotel deals
+    if search_type in ["hotels", "packages"]:
+        hotel_deals = []
+
+        if destination in ["Makkah", "Both"]:
+            hotel_deals.extend([
+                {
+                    "deal_type": search_type,
+                    "hotel_name": "Makkah Clock Royal Tower",
+                    "rating": 5.0,
+                    "price": 1850 if search_type == "packages" else 450,
+                    "distance_km": 0.1,
+                    "amenities": ["WiFi", "Breakfast", "Haram View", "Pool", "Spa"],
+                    "booking_url": "https://booking.com/makkah-clock-tower",
+                    "provider": "Booking.com",
+                    "location": "Adjacent to Masjid al-Haram"
+                },
+                {
+                    "deal_type": search_type,
+                    "hotel_name": "Swissotel Makkah",
+                    "rating": 5.0,
+                    "price": 1680 if search_type == "packages" else 380,
+                    "distance_km": 0.2,
+                    "amenities": ["WiFi", "Breakfast", "Spa", "Restaurant"],
+                    "booking_url": "https://expedia.com/swissotel-makkah",
+                    "provider": "Expedia",
+                    "location": "200m from Masjid al-Haram"
+                },
+                {
+                    "deal_type": search_type,
+                    "hotel_name": "Dar Al Eiman Royal",
+                    "rating": 4.0,
+                    "price": 1480 if search_type == "packages" else 280,
+                    "distance_km": 0.5,
+                    "amenities": ["WiFi", "Breakfast", "Shuttle"],
+                    "booking_url": "https://hotels.com/dar-al-eiman",
+                    "provider": "Hotels.com",
+                    "location": "500m from Masjid al-Haram"
+                }
+            ])
+
+        if destination in ["Madinah", "Both"]:
+            hotel_deals.extend([
+                {
+                    "deal_type": search_type,
+                    "hotel_name": "Oberoi Madinah",
+                    "rating": 5.0,
+                    "price": 1620 if search_type == "packages" else 320,
+                    "distance_km": 0.3,
+                    "amenities": ["WiFi", "Breakfast", "Prophet's Mosque View"],
+                    "booking_url": "https://booking.com/oberoi-madinah",
+                    "provider": "Booking.com",
+                    "location": "Near Prophet's Mosque"
+                },
+                {
+                    "deal_type": search_type,
+                    "hotel_name": "Dar Al Iman InterContinental",
+                    "rating": 5.0,
+                    "price": 1590 if search_type == "packages" else 290,
+                    "distance_km": 0.4,
+                    "amenities": ["WiFi", "Breakfast", "Pool", "Gym"],
+                    "booking_url": "https://expedia.com/dar-al-iman-ic",
+                    "provider": "Expedia",
+                    "location": "400m from Prophet's Mosque"
+                }
+            ])
+
+        # Filter hotels by budget and rating
+        filtered_hotels = [
+            deal for deal in hotel_deals
+            if deal["price"] <= search_params.budget_max
+            and deal["rating"] >= search_params.hotel_rating
+            and deal["distance_km"] <= search_params.distance_from_haram
+        ]
+        mock_deals.extend(filtered_hotels)
+
+    # Flight deals
+    if search_type in ["flights", "packages"]:
+        dep_city = search_params.departure_city or "New York (JFK)"
+        flight_class = search_params.flight_class or "economy"
+
+        flight_deals = [
             {
-                "hotel_name": "Makkah Clock Royal Tower",
-                "rating": 5.0,
-                "price": 450,
-                "distance_km": 0.1,
-                "amenities": ["WiFi", "Breakfast", "Haram View", "Pool"],
-                "booking_url": "https://booking.com/makkah-clock-tower",
-                "provider": "Booking.com",
-                "location": "Makkah, Adjacent to Masjid al-Haram"
+                "deal_type": "flight" if search_type == "flights" else search_type,
+                "flight_airline": "Saudi Airlines",
+                "price": 1850 if search_type == "packages" else 850,
+                "departure_city": dep_city,
+                "arrival_city": "Jeddah (JED)",
+                "flight_class": flight_class,
+                "stops": 0,
+                "booking_url": "https://saudia.com",
+                "provider": "Saudi Airlines",
+                "location": "Jeddah (JED)"
             },
             {
-                "hotel_name": "Swissotel Makkah",
-                "rating": 5.0,
-                "price": 380,
-                "distance_km": 0.2,
-                "amenities": ["WiFi", "Breakfast", "Spa", "Restaurant"],
-                "booking_url": "https://expedia.com/swissotel-makkah",
-                "provider": "Expedia",
-                "location": "Makkah, 200m from Haram"
+                "deal_type": "flight" if search_type == "flights" else search_type,
+                "flight_airline": "Emirates",
+                "price": 1680 if search_type == "packages" else 920,
+                "departure_city": dep_city,
+                "arrival_city": "Jeddah (JED)",
+                "flight_class": flight_class,
+                "stops": 1,
+                "booking_url": "https://emirates.com",
+                "provider": "Emirates",
+                "location": "Jeddah (JED)"
             },
             {
-                "hotel_name": "Dar Al Eiman Royal",
-                "rating": 4.0,
-                "price": 280,
-                "distance_km": 0.5,
-                "amenities": ["WiFi", "Breakfast", "Shuttle"],
-                "booking_url": "https://hotels.com/dar-al-eiman",
-                "provider": "Hotels.com",
-                "location": "Makkah, 500m from Haram"
+                "deal_type": "flight" if search_type == "flights" else search_type,
+                "flight_airline": "Qatar Airways",
+                "price": 1750 if search_type == "packages" else 890,
+                "departure_city": dep_city,
+                "arrival_city": "Jeddah (JED)",
+                "flight_class": flight_class,
+                "stops": 1,
+                "booking_url": "https://qatarairways.com",
+                "provider": "Qatar Airways",
+                "location": "Jeddah (JED)"
             }
-        ])
+        ]
 
-    if destination in ["Madinah", "Both"]:
-        mock_deals.extend([
-            {
-                "hotel_name": "Oberoi Madinah",
-                "rating": 5.0,
-                "price": 320,
-                "distance_km": 0.3,
-                "amenities": ["WiFi", "Breakfast", "Prophet's Mosque View"],
-                "booking_url": "https://booking.com/oberoi-madinah",
-                "provider": "Booking.com",
-                "location": "Madinah, Near Prophet's Mosque"
-            },
-            {
-                "hotel_name": "Dar Al Iman InterContinental",
-                "rating": 5.0,
-                "price": 290,
-                "distance_km": 0.4,
-                "amenities": ["WiFi", "Breakfast", "Pool", "Gym"],
-                "booking_url": "https://expedia.com/dar-al-iman-ic",
-                "provider": "Expedia",
-                "location": "Madinah, 400m from Mosque"
-            }
-        ])
+        # Filter flights by budget and direct flights preference
+        filtered_flights = [
+            deal for deal in flight_deals
+            if deal["price"] <= search_params.budget_max
+            and (not search_params.direct_flights_only or deal["stops"] == 0)
+        ]
+        mock_deals.extend(filtered_flights)
 
-    # Filter by budget and rating
-    filtered_deals = [
-        deal for deal in mock_deals
-        if deal["price"] <= search_params.budget_max
-        and deal["rating"] >= search_params.hotel_rating
-        and deal["distance_km"] <= search_params.distance_from_haram
-    ]
-
-    return filtered_deals
+    return mock_deals
 
 
 @router.post("/search", response_model=SearchResponse)
@@ -264,15 +342,23 @@ async def search_umrah_deals(search: UmrahSearchRequest):
     for deal in deals_data:
         try:
             umrah_deal = UmrahDeal(
-                hotel_name=deal.get("hotel_name", "Unknown Hotel"),
-                hotel_rating=deal.get("rating", 0),
+                deal_type=deal.get("deal_type", "hotel"),
                 price=deal.get("price", 0),
                 currency="USD",
                 location=deal.get("location", ""),
+                booking_url=deal.get("booking_url"),
+                provider=deal.get("provider"),
+                # Hotel fields
+                hotel_name=deal.get("hotel_name"),
+                hotel_rating=deal.get("rating"),
                 distance_from_haram=deal.get("distance_km"),
                 amenities=deal.get("amenities", []),
-                booking_url=deal.get("booking_url"),
-                provider=deal.get("provider")
+                # Flight fields
+                flight_airline=deal.get("flight_airline"),
+                departure_city=deal.get("departure_city"),
+                arrival_city=deal.get("arrival_city"),
+                flight_class=deal.get("flight_class"),
+                stops=deal.get("stops")
             )
             deals.append(umrah_deal)
         except Exception as e:
