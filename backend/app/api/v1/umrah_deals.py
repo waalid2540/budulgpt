@@ -10,6 +10,14 @@ from datetime import datetime, timedelta
 import httpx
 import os
 import json
+import sys
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
+# Import alert service
+from app.services.alerts import send_alert
 
 router = APIRouter()
 
@@ -86,37 +94,63 @@ async def search_umrah_deals_with_perplexity(search_params: UmrahSearchRequest) 
     Use Perplexity AI to search for Umrah deals across the web
     """
 
-    # Build the search query
+    # Build the search query based on search type
     destination_str = search_params.destination
     if search_params.destination == "Both":
         destination_str = "Makkah and Madinah"
 
-    query = f"""Find current Umrah hotel deals in {destination_str} with these requirements:
+    search_type = search_params.search_type
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
+    # Build query based on search type
+    if search_type == "hotels":
+        query = f"""Search for CURRENT available Umrah hotels in {destination_str} for dates around {search_params.check_in_date or current_date}.
+
+Requirements:
 - Budget: ${search_params.budget_min} to ${search_params.budget_max} per night
 - Hotel rating: {search_params.hotel_rating} stars or higher
 - Distance from Haram: within {search_params.distance_from_haram} km
 - Duration: {search_params.duration_nights} nights
-"""
 
-    if search_params.check_in_date:
-        query += f"- Check-in: {search_params.check_in_date}\n"
-    if search_params.check_out_date:
-        query += f"- Check-out: {search_params.check_out_date}\n"
+Search these sites: Booking.com, Expedia, Hotels.com, Agoda, Almosafer, Seera, HotelsCombined
 
-    query += """
-Search across major booking sites (Booking.com, Expedia, Hotels.com, Agoda) and Umrah-specific travel agencies.
+For each hotel, return JSON with: hotel_name, rating, price (per night USD), distance_km, amenities (array), booking_url, provider, location, deal_type:"hotel"
 
-For each hotel found, provide:
-1. Hotel name
-2. Star rating
-3. Current price per night in USD
-4. Distance from Masjid al-Haram
-5. Key amenities
-6. Booking website/link
-7. Provider name
+Return ONLY valid JSON array, no markdown."""
 
-Format as JSON array with these exact fields: hotel_name, rating, price, distance_km, amenities, booking_url, provider, location
-"""
+    elif search_type == "flights":
+        dep_city = search_params.departure_city or "New York"
+        query = f"""Search for CURRENT available flights from {dep_city} to Jeddah/Medina Saudi Arabia for Umrah around {search_params.check_in_date or current_date}.
+
+Requirements:
+- Budget: up to ${search_params.budget_max} roundtrip
+- Flight class: {search_params.flight_class}
+- Direct flights only: {search_params.direct_flights_only}
+
+Search: Saudi Airlines, Emirates, Qatar Airways, Etihad, Turkish Airlines, Google Flights, Kayak, Skyscanner
+
+For each flight, return JSON with: flight_airline, price (USD roundtrip), departure_city, arrival_city, flight_class, stops, booking_url, provider, location (arrival airport), deal_type:"flight"
+
+Return ONLY valid JSON array, no markdown."""
+
+    else:  # packages
+        dep_city = search_params.departure_city or "New York"
+        query = f"""Search for CURRENT Umrah packages (flight + hotel) from {dep_city} to {destination_str} around {search_params.check_in_date or current_date}.
+
+Requirements:
+- Total budget: up to ${search_params.budget_max}
+- Duration: {search_params.duration_nights} nights
+- Hotel rating: {search_params.hotel_rating}+ stars
+- Flight class: {search_params.flight_class}
+
+Search: Almosafer, Seera, HalalBooking, IslamicTravel, BookingMuslim, Umrahme
+
+For each package, return JSON with BOTH:
+Hotel: hotel_name, rating, location, distance_km, amenities
+Flight: flight_airline, departure_city, arrival_city, flight_class, stops
+Common: price (total USD), booking_url, provider, deal_type:"package"
+
+Return ONLY valid JSON array, no markdown."""
 
     # Call Perplexity API
     try:
@@ -132,15 +166,17 @@ Format as JSON array with these exact fields: hotel_name, rating, price, distanc
                     "messages": [
                         {
                             "role": "system",
-                            "content": "You are a travel deal finder specializing in Umrah packages and hotels. Always return results in valid JSON format."
+                            "content": "You are a real-time travel search engine. Search the web RIGHT NOW for current, available deals. Return ONLY valid JSON array, no explanations, no markdown. Must be actual bookable deals with real URLs."
                         },
                         {
                             "role": "user",
                             "content": query
                         }
                     ],
-                    "temperature": 0.2,
-                    "max_tokens": 2000
+                    "temperature": 0.1,  # Lower temperature for more factual results
+                    "max_tokens": 4000,  # More tokens for multiple results
+                    "return_citations": True,  # Get source URLs
+                    "search_recency_filter": "month"  # Only recent results
                 },
                 timeout=30.0
             )
@@ -389,20 +425,54 @@ async def save_search_with_alerts(request: SavedSearchRequest, background_tasks:
     # Generate a unique search ID
     search_id = f"search_{int(datetime.now().timestamp())}"
 
+    # Send confirmation alert to user
+    if request.alert_enabled and (request.alert_email or request.alert_whatsapp or request.alert_sms):
+        # Build a sample deal info for confirmation
+        sample_deal = {
+            "hotel_name": f"Umrah Deal ({request.search_criteria.destination})",
+            "price": request.search_criteria.budget_max,
+            "currency": "USD",
+            "location": request.search_criteria.destination,
+            "booking_url": "https://madinagpt.com/umrah-deals",
+            "provider": "MadinaGPT",
+            "rating": request.search_criteria.hotel_rating,
+        }
+
+        # Send confirmation alert in background
+        background_tasks.add_task(
+            send_alert,
+            user_email=request.user_email if request.alert_email else None,
+            user_phone=request.user_phone if (request.alert_whatsapp or request.alert_sms) else None,
+            search_name=request.search_name,
+            deal_info=sample_deal,
+            alert_type="new_deal",
+            send_email=request.alert_email,
+            send_whatsapp=request.alert_whatsapp,
+            send_sms=request.alert_sms
+        )
+
     # TODO: Save to database
     # For now, return success response
+
+    alert_channels = []
+    if request.alert_email:
+        alert_channels.append("email")
+    if request.alert_whatsapp:
+        alert_channels.append("WhatsApp")
+    if request.alert_sms:
+        alert_channels.append("SMS")
 
     return {
         "success": True,
         "search_id": search_id,
-        "message": "Search saved successfully",
+        "message": "Search saved successfully! Check your inbox for a confirmation.",
         "alert_status": {
             "email": request.alert_email,
             "whatsapp": request.alert_whatsapp,
             "sms": request.alert_sms
         },
         "next_check": (datetime.now() + timedelta(hours=6)).isoformat(),
-        "notification": f"You'll receive alerts via {'email' if request.alert_email else ''}{' and WhatsApp' if request.alert_whatsapp else ''}{' and SMS' if request.alert_sms else ''}"
+        "notification": f"You'll receive alerts via {' + '.join(alert_channels) if alert_channels else 'no channels (enable alerts first)'}"
     }
 
 

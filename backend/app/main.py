@@ -9,11 +9,13 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 import time
 import logging
+import asyncio
 from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.db.database import init_db
 from app.api.v1.router import api_router
+from app.services.price_monitor import start_price_monitoring, stop_price_monitoring
 # from app.core.logging import setup_logging
 
 # Setup logging
@@ -23,20 +25,28 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    logger.info("🕌 Starting Budul AI - Islamic Intelligence Platform")
-    
+    logger.info("🕌 Starting MadinaGPT - Islamic Intelligence Platform")
+
     # Initialize database
     await init_db()
     logger.info("📚 Islamic knowledge database initialized")
-    
+
+    # Start price monitoring service in background
+    monitoring_task = asyncio.create_task(start_price_monitoring())
+    logger.info("🔔 Umrah price monitoring service started")
+
     yield
-    
-    logger.info("🌙 Budul AI shutting down gracefully")
+
+    # Stop price monitoring
+    await stop_price_monitoring()
+    logger.info("🔔 Umrah price monitoring service stopped")
+
+    logger.info("🌙 MadinaGPT shutting down gracefully")
 
 # Create FastAPI app
 app = FastAPI(
-    title="Budul AI API",
-    description="Islamic Artificial Intelligence Platform - Serving 1.8 billion Muslims worldwide",
+    title="MadinaGPT API",
+    description="Islamic Artificial Intelligence Platform - Supporting Masjid Madina - Serving 1.8 billion Muslims worldwide",
     version="1.0.0",
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url="/redoc" if settings.ENVIRONMENT == "development" else None,
@@ -72,17 +82,18 @@ app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/")
 async def root():
-    """Root endpoint - Budul AI welcome message"""
+    """Root endpoint - MadinaGPT welcome message"""
     return {
-        "message": "🕌 Welcome to Budul AI - Islamic Intelligence for the Modern World",
+        "message": "🕌 Welcome to MadinaGPT - Islamic Intelligence for the Modern World",
         "version": "1.0.0",
-        "description": "Authentic Islamic knowledge powered by cutting-edge AI technology",
+        "description": "Authentic Islamic knowledge powered by cutting-edge AI technology - Supporting Masjid Madina",
         "features": [
-            "Budul GPT - Islamic Conversational AI",
-            "Budul API - Islamic AI for Developers", 
-            "Budul Studio - Islamic Video Generation",
-            "Budul Vision - Islamic Image Creation"
+            "Madina GPT - Islamic Conversational AI",
+            "Du'a Generator - Beautiful Islamic Supplications",
+            "Kids Stories - Islamic Stories for Children",
+            "Umrah Deal Finder - AI-powered Umrah travel search with price alerts"
         ],
+        "donation_info": "50% of all subscriptions support Masjid Madina operations and community programs",
         "documentation": "/docs" if settings.ENVIRONMENT == "development" else "Contact support for API documentation"
     }
 
@@ -92,8 +103,12 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": time.time(),
-        "service": "Budul AI Backend",
-        "version": "1.0.0"
+        "service": "MadinaGPT Backend",
+        "version": "1.0.0",
+        "features": {
+            "umrah_deal_finder": "active",
+            "price_monitoring": "active"
+        }
     }
 
 @app.exception_handler(Exception)
