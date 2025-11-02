@@ -18,6 +18,8 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 # Import alert service
 from app.services.alerts import send_alert
+# Import affiliate tracker
+from app.services.affiliate_tracker import affiliate_tracker
 
 router = APIRouter()
 
@@ -373,16 +375,21 @@ async def search_umrah_deals(search: UmrahSearchRequest):
     # Search using Perplexity (or mock data)
     deals_data = await search_umrah_deals_with_perplexity(search)
 
-    # Convert to UmrahDeal models
+    # Convert to UmrahDeal models and add affiliate tracking
     deals = []
     for deal in deals_data:
         try:
+            # Add affiliate tracking code to booking URL
+            original_url = deal.get("booking_url", "")
+            deal_type = deal.get("deal_type", "hotel")
+            tracked_url = affiliate_tracker.add_affiliate_code(original_url, deal_type)
+
             umrah_deal = UmrahDeal(
-                deal_type=deal.get("deal_type", "hotel"),
+                deal_type=deal_type,
                 price=deal.get("price", 0),
                 currency="USD",
                 location=deal.get("location", ""),
-                booking_url=deal.get("booking_url"),
+                booking_url=tracked_url,  # Use tracked URL with affiliate code
                 provider=deal.get("provider"),
                 # Hotel fields
                 hotel_name=deal.get("hotel_name"),
