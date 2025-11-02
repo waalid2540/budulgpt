@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, MapPin, Calendar, DollarSign, Star, Hotel, Bell, Heart, ExternalLink, Loader2, Plane, Package, ArrowRight, Mail, MessageCircle, Smartphone } from 'lucide-react'
+import { Search, MapPin, Calendar, DollarSign, Star, Hotel, Bell, Heart, ExternalLink, Loader2, Plane, Package, ArrowRight, Mail, MessageCircle, Smartphone, CheckCircle } from 'lucide-react'
 
 type SearchType = 'hotels' | 'flights' | 'packages'
 
@@ -46,16 +46,16 @@ export default function UmrahDealsPage() {
   const [deals, setDeals] = useState<UmrahDeal[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false)
-  const [showAlertInfo, setShowAlertInfo] = useState(true)
   const [searchPerformed, setSearchPerformed] = useState(false)
 
-  // Save search modal state
+  // Alert setup state (now at top level)
   const [searchName, setSearchName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
   const [alertEmail, setAlertEmail] = useState(true)
   const [alertWhatsApp, setAlertWhatsApp] = useState(false)
   const [alertSMS, setAlertSMS] = useState(false)
+  const [alertsConfigured, setAlertsConfigured] = useState(false)
 
   const handleSearch = async () => {
     setIsSearching(true)
@@ -216,7 +216,7 @@ export default function UmrahDealsPage() {
 
       const data = await response.json()
       if (data.success) {
-        alert('Search saved successfully! You will receive alerts when prices drop.')
+        alert('✅ Search saved! You will receive alerts when prices drop.')
         setShowSaveModal(false)
         setSearchName('')
       }
@@ -224,6 +224,10 @@ export default function UmrahDealsPage() {
       console.error('Save search error:', error)
       alert('Failed to save search. Please try again.')
     }
+  }
+
+  const checkAlertsConfigured = () => {
+    return userEmail.trim() !== '' && (alertEmail || alertWhatsApp || alertSMS)
   }
 
   return (
@@ -265,7 +269,7 @@ export default function UmrahDealsPage() {
       <div className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <div className="inline-flex items-center space-x-2 bg-white/60 backdrop-blur-xl rounded-full px-6 py-3 mb-6 border border-madina-green-200 shadow-lg">
               <span className="text-2xl">🕋</span>
               <span className="text-madina-green-700 font-semibold">AI-Powered Umrah Deal Finder</span>
@@ -276,52 +280,141 @@ export default function UmrahDealsPage() {
               </span>
             </h1>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Search hotels, flights, and complete packages for your Umrah journey. Get instant alerts when prices drop!
+              Search hotels, flights, and packages. Get instant price alerts via Email, WhatsApp, or SMS!
             </p>
           </div>
 
-          {/* Alert Info Banner */}
-          {showAlertInfo && (
-            <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-4 flex-1">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Bell className="w-6 h-6 text-white" />
+          {/* PRICE ALERTS SETUP SECTION - PROMINENT */}
+          <div className="mb-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-8 shadow-2xl border-4 border-white/50">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center">
+                  <Bell className="w-8 h-8 text-blue-600" />
+                </div>
+                <div className="text-center">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    🔔 Set Up Price Alerts
+                  </h2>
+                  <p className="text-blue-100 text-lg">
+                    Enter your contact info below and we'll notify you when prices drop!
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 mb-4">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Email Input */}
+                  <div>
+                    <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center space-x-2">
+                      <Mail className="w-5 h-5 text-madina-green-500" />
+                      <span>Email Address *</span>
+                      {userEmail && alertEmail && <CheckCircle className="w-5 h-5 text-green-500" />}
+                    </label>
+                    <input
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                      placeholder="your.email@example.com"
+                      className="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none text-lg font-semibold"
+                    />
+                    <div className="flex items-center space-x-2 mt-2">
+                      <input
+                        type="checkbox"
+                        id="alertEmailTop"
+                        checked={alertEmail}
+                        onChange={(e) => setAlertEmail(e.target.checked)}
+                        className="w-5 h-5 text-madina-green-500 border-slate-300 rounded focus:ring-madina-green-500"
+                      />
+                      <label htmlFor="alertEmailTop" className="text-sm font-medium text-slate-700 cursor-pointer">
+                        Send me email alerts
+                      </label>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-800 mb-2">
-                      💡 Never Miss a Deal - Set Up Price Alerts!
-                    </h3>
-                    <p className="text-slate-600 mb-4">
-                      Save your search and we'll notify you via <strong>Email, WhatsApp, or SMS</strong> when prices drop or new deals become available. Our AI checks prices every 6 hours!
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
-                        <Mail className="w-4 h-4 text-madina-green-500" />
-                        <span className="text-sm font-medium text-slate-700">Email Alerts</span>
+
+                  {/* Phone Input */}
+                  <div>
+                    <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center space-x-2">
+                      <Smartphone className="w-5 h-5 text-green-500" />
+                      <span>Phone Number (for WhatsApp/SMS)</span>
+                      {userPhone && (alertWhatsApp || alertSMS) && <CheckCircle className="w-5 h-5 text-green-500" />}
+                    </label>
+                    <input
+                      type="tel"
+                      value={userPhone}
+                      onChange={(e) => setUserPhone(e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                      className="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none text-lg font-semibold"
+                    />
+                    <div className="flex items-center space-x-4 mt-2">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="alertWhatsAppTop"
+                          checked={alertWhatsApp}
+                          onChange={(e) => setAlertWhatsApp(e.target.checked)}
+                          className="w-5 h-5 text-green-500 border-slate-300 rounded focus:ring-green-500"
+                        />
+                        <label htmlFor="alertWhatsAppTop" className="text-sm font-medium text-slate-700 cursor-pointer flex items-center space-x-1">
+                          <MessageCircle className="w-4 h-4 text-green-500" />
+                          <span>WhatsApp</span>
+                        </label>
                       </div>
-                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
-                        <MessageCircle className="w-4 h-4 text-green-500" />
-                        <span className="text-sm font-medium text-slate-700">WhatsApp Alerts</span>
-                      </div>
-                      <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg">
-                        <Smartphone className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm font-medium text-slate-700">SMS Alerts</span>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="alertSMSTop"
+                          checked={alertSMS}
+                          onChange={(e) => setAlertSMS(e.target.checked)}
+                          className="w-5 h-5 text-blue-500 border-slate-300 rounded focus:ring-blue-500"
+                        />
+                        <label htmlFor="alertSMSTop" className="text-sm font-medium text-slate-700 cursor-pointer flex items-center space-x-1">
+                          <Smartphone className="w-4 h-4 text-blue-500" />
+                          <span>SMS</span>
+                        </label>
                       </div>
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setShowAlertInfo(false)}
-                  className="text-slate-400 hover:text-slate-600 ml-4"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+              </div>
+
+              {/* Alert Status */}
+              {checkAlertsConfigured() ? (
+                <div className="bg-green-500 text-white px-6 py-4 rounded-xl flex items-center space-x-3">
+                  <CheckCircle className="w-6 h-6 flex-shrink-0" />
+                  <div>
+                    <div className="font-bold text-lg">✅ Alerts Configured!</div>
+                    <div className="text-sm text-green-100">
+                      You'll receive notifications via: {alertEmail && 'Email'}{alertWhatsApp && ' • WhatsApp'}{alertSMS && ' • SMS'}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-yellow-500 text-white px-6 py-4 rounded-xl flex items-center space-x-3">
+                  <Bell className="w-6 h-6 flex-shrink-0" />
+                  <div>
+                    <div className="font-bold text-lg">⚠️ Complete Your Alert Setup</div>
+                    <div className="text-sm text-yellow-100">
+                      Enter your email and select at least one notification method above
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* How it Works */}
+              <div className="mt-6 bg-white/20 backdrop-blur-xl rounded-xl p-4 text-white">
+                <h3 className="font-bold mb-2 flex items-center space-x-2">
+                  <span>💡</span>
+                  <span>How Price Alerts Work:</span>
+                </h3>
+                <ul className="space-y-1 text-sm text-blue-100 ml-6">
+                  <li>• AI checks prices every 6 hours automatically</li>
+                  <li>• Get notified when prices drop by 10% or more</li>
+                  <li>• Receive alerts for new deals matching your criteria</li>
+                  <li>• Never miss limited-time offers</li>
+                </ul>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Search Type Tabs */}
           <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-2 border border-white/50 shadow-xl mb-8 max-w-2xl mx-auto">
@@ -572,13 +665,13 @@ export default function UmrahDealsPage() {
                 )}
               </button>
 
-              {searchPerformed && deals.length > 0 && (
+              {searchPerformed && deals.length > 0 && checkAlertsConfigured() && (
                 <button
                   onClick={() => setShowSaveModal(true)}
                   className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3"
                 >
                   <Bell className="w-6 h-6" />
-                  <span>Save & Set Alerts</span>
+                  <span>Save Search & Enable Alerts</span>
                 </button>
               )}
             </div>
@@ -591,13 +684,13 @@ export default function UmrahDealsPage() {
                 <h2 className="text-3xl font-bold text-slate-800">
                   {deals.length} {searchType} found
                 </h2>
-                {deals.length > 0 && (
+                {deals.length > 0 && checkAlertsConfigured() && (
                   <button
                     onClick={() => setShowSaveModal(true)}
-                    className="flex items-center space-x-2 text-madina-green-600 hover:text-madina-green-700 font-semibold"
+                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold bg-blue-50 px-6 py-3 rounded-xl hover:bg-blue-100 transition-colors"
                   >
                     <Bell className="w-5 h-5" />
-                    <span>Save this search & get alerts</span>
+                    <span>Save & Monitor Prices</span>
                   </button>
                 )}
               </div>
@@ -717,8 +810,8 @@ export default function UmrahDealsPage() {
           <div className="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl transform transition-all">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-3xl font-bold text-slate-800 flex items-center space-x-3">
-                <Bell className="w-8 h-8 text-madina-green-500" />
-                <span>Save Search & Set Alerts</span>
+                <Bell className="w-8 h-8 text-blue-500" />
+                <span>Save Search & Enable Alerts</span>
               </h3>
               <button
                 onClick={() => setShowSaveModal(false)}
@@ -732,116 +825,33 @@ export default function UmrahDealsPage() {
 
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-4 mb-6">
               <p className="text-sm text-slate-700">
-                <strong>🔔 How it works:</strong> We'll monitor prices for your search criteria and notify you instantly when:
+                <strong>✅ Your alerts are ready!</strong>
               </p>
-              <ul className="mt-2 space-y-1 text-sm text-slate-600 ml-4">
-                <li>• Prices drop by 10% or more</li>
-                <li>• New deals matching your criteria appear</li>
-                <li>• Limited-time offers become available</li>
-              </ul>
+              <p className="text-sm text-slate-600 mt-2">
+                We'll monitor prices and notify you via: <strong>{alertEmail && 'Email'}{alertWhatsApp && ' • WhatsApp'}{alertSMS && ' • SMS'}</strong>
+              </p>
             </div>
 
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Search Name
+                  Give This Search a Name
                 </label>
                 <input
                   type="text"
                   value={searchName}
                   onChange={(e) => setSearchName(e.target.value)}
-                  placeholder="e.g., Ramadan Umrah 2024"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
+                  placeholder="e.g., Ramadan Umrah 2025"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Phone Number (optional, for WhatsApp/SMS)
-                </label>
-                <input
-                  type="tel"
-                  value={userPhone}
-                  onChange={(e) => setUserPhone(e.target.value)}
-                  placeholder="+1 234 567 8900"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-madina-green-500 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-3">
-                  Notification Channels
-                </label>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <Mail className="w-5 h-5 text-madina-green-500" />
-                      <div>
-                        <div className="font-semibold text-slate-800">Email Notifications</div>
-                        <div className="text-xs text-slate-500">Get instant email alerts</div>
-                      </div>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={alertEmail}
-                        onChange={(e) => setAlertEmail(e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-madina-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-madina-green-500"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <MessageCircle className="w-5 h-5 text-green-500" />
-                      <div>
-                        <div className="font-semibold text-slate-800">WhatsApp Alerts</div>
-                        <div className="text-xs text-slate-500">Receive alerts on WhatsApp</div>
-                      </div>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={alertWhatsApp}
-                        onChange={(e) => setAlertWhatsApp(e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <Smartphone className="w-5 h-5 text-blue-500" />
-                      <div>
-                        <div className="font-semibold text-slate-800">SMS Notifications</div>
-                        <div className="text-xs text-slate-500">Get text message alerts</div>
-                      </div>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={alertSMS}
-                        onChange={(e) => setAlertSMS(e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
-                    </label>
-                  </div>
+              <div className="bg-slate-50 rounded-xl p-4">
+                <h4 className="font-semibold text-slate-800 mb-2">📧 Your Alert Contacts:</h4>
+                <div className="space-y-2 text-sm text-slate-600">
+                  {alertEmail && <div className="flex items-center space-x-2"><Mail className="w-4 h-4 text-madina-green-500" /><span>Email: {userEmail}</span></div>}
+                  {alertWhatsApp && <div className="flex items-center space-x-2"><MessageCircle className="w-4 h-4 text-green-500" /><span>WhatsApp: {userPhone}</span></div>}
+                  {alertSMS && <div className="flex items-center space-x-2"><Smartphone className="w-4 h-4 text-blue-500" /><span>SMS: {userPhone}</span></div>}
                 </div>
               </div>
             </div>
@@ -855,10 +865,10 @@ export default function UmrahDealsPage() {
               </button>
               <button
                 onClick={handleSaveSearch}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-madina-green-500 to-madina-green-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
               >
                 <Bell className="w-5 h-5" />
-                <span>Save & Enable Alerts</span>
+                <span>Save & Start Monitoring</span>
               </button>
             </div>
           </div>
