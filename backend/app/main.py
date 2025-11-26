@@ -1,5 +1,6 @@
 """
-Budul AI - Islamic Artificial Intelligence Platform
+Global Waqaf Tech - Digital Waqf Network Platform
+Multi-tenant SaaS platform for masajid and Islamic organizations
 Main FastAPI application entry point
 """
 
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    logger.info("🕌 Starting MadinaGPT - Islamic Intelligence Platform")
+    logger.info("🕌 Starting Global Waqaf Tech - Digital Waqf Network Platform")
 
     # Initialize database
     await init_db()
@@ -41,13 +42,13 @@ async def lifespan(app: FastAPI):
     await stop_price_monitoring()
     logger.info("🔔 Umrah price monitoring service stopped")
 
-    logger.info("🌙 MadinaGPT shutting down gracefully")
+    logger.info("🌙 Global Waqaf Tech shutting down gracefully")
 
 # Create FastAPI app
 app = FastAPI(
-    title="MadinaGPT API",
-    description="Islamic Artificial Intelligence Platform - Supporting Masjid Madina - Serving 1.8 billion Muslims worldwide",
-    version="1.0.0",
+    title="Global Waqaf Tech API",
+    description="Digital Waqf Network - Multi-tenant platform empowering masajid and Islamic organizations worldwide with AI-powered tools",
+    version="2.0.0",
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url="/redoc" if settings.ENVIRONMENT == "development" else None,
     lifespan=lifespan
@@ -82,18 +83,22 @@ app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/")
 async def root():
-    """Root endpoint - MadinaGPT welcome message"""
+    """Root endpoint - Global Waqaf Tech welcome message"""
     return {
-        "message": "🕌 Welcome to MadinaGPT - Islamic Intelligence for the Modern World",
-        "version": "1.0.0",
-        "description": "Authentic Islamic knowledge powered by cutting-edge AI technology - Supporting Masjid Madina",
+        "message": "🕌 Welcome to Global Waqaf Tech - Empowering Masajid & Islamic Organizations",
+        "version": "2.0.0",
+        "description": "Multi-tenant digital waqf platform providing AI-powered tools for masajid and Islamic organizations worldwide",
+        "platform_type": "Digital Waqf Network",
         "features": [
-            "Madina GPT - Islamic Conversational AI",
-            "Du'a Generator - Beautiful Islamic Supplications",
-            "Kids Stories - Islamic Stories for Children",
-            "Umrah Deal Finder - AI-powered Umrah travel search with price alerts"
+            "Du'a & Dhikr Studio - AI-powered Islamic supplications",
+            "Kids Story Studio - Islamic stories with moral lessons",
+            "Umrah & Hajj Alerts - Travel deal finder with price monitoring",
+            "Grant Finder - Search and track grant opportunities",
+            "Marketplace - Connect Muslim businesses and services",
+            "Learning Hub - Islamic courses and educational content",
+            "Social Media Studio - AI-powered content generation for masajid"
         ],
-        "donation_info": "50% of all subscriptions support Masjid Madina operations and community programs",
+        "waqf_info": "20% of subscription proceeds support selected masajid operations and community programs",
         "documentation": "/docs" if settings.ENVIRONMENT == "development" else "Contact support for API documentation"
     }
 
@@ -103,11 +108,17 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": time.time(),
-        "service": "MadinaGPT Backend",
-        "version": "1.0.0",
+        "service": "Global Waqaf Tech Backend",
+        "version": "2.0.0",
+        "platform": "multi-tenant",
         "features": {
-            "umrah_deal_finder": "active",
-            "price_monitoring": "active"
+            "dua_studio": "active",
+            "story_studio": "active",
+            "umrah_alerts": "active",
+            "grant_finder": "active",
+            "marketplace": "active",
+            "learning_hub": "active",
+            "social_studio": "active"
         }
     }
 

@@ -10,21 +10,21 @@ const amiri = Amiri({
 })
 
 export const metadata: Metadata = {
-  title: 'MadinaGPT - Faith, Knowledge, and Guidance',
-  description: 'MadinaGPT: Your Islamic AI companion for faith, knowledge, and guidance. Supporting Masjid Madina with authentic Islamic content, duas, and stories for the whole family.',
-  keywords: ['MadinaGPT', 'Islamic AI', 'Madina GPT', 'Islamic ChatGPT', 'Muslim AI', 'Dua Generator', 'Islamic Stories', 'Umrah Alert', 'Masjid Madina'],
-  authors: [{ name: 'MadinaGPT Team' }],
+  title: 'Global Waqaf Tech - Digital Waqf Network for Islamic Organizations',
+  description: 'Global Waqaf Tech: Multi-tenant SaaS platform empowering masajid and Islamic organizations with AI-powered tools. 20% of proceeds support selected masajid worldwide.',
+  keywords: ['Global Waqaf Tech', 'Islamic SaaS', 'Masjid Management', 'Islamic AI Tools', 'Waqf Technology', 'Dua Generator', 'Islamic Stories', 'Grant Finder', 'Learning Hub', 'Social Media Studio'],
+  authors: [{ name: 'Global Waqaf Tech' }],
   openGraph: {
-    title: 'MadinaGPT - Faith, Knowledge, and Guidance',
-    description: 'Islamic AI platform supporting Masjid Madina. Chat with MadinaGPT, generate duas, create Islamic stories for kids, and more.',
-    url: 'https://madinagpt.com',
-    siteName: 'MadinaGPT',
+    title: 'Global Waqaf Tech - Empowering Islamic Organizations',
+    description: 'Multi-tenant platform with 7 AI-powered modules for masajid and Islamic organizations. 20% of proceeds support selected masajid operations.',
+    url: 'https://globalwaqaftech.com',
+    siteName: 'Global Waqaf Tech',
     images: [
       {
-        url: 'https://madinagpt.com/og-image.jpg',
+        url: 'https://globalwaqaftech.com/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'MadinaGPT - Islamic AI Platform Supporting Masjid Madina',
+        alt: 'Global Waqaf Tech - Digital Waqf Network',
       },
     ],
     locale: 'en_US',
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MadinaGPT - Faith, Knowledge, and Guidance',
-    description: 'Islamic AI platform supporting Masjid Madina with authentic Islamic content and tools.',
-    images: ['https://madinagpt.com/og-image.jpg'],
-    creator: '@MadinaGPT',
+    title: 'Global Waqaf Tech - Empowering Islamic Organizations',
+    description: 'Multi-tenant SaaS platform with AI-powered tools for masajid worldwide. 20% supports selected masajid.',
+    images: ['https://globalwaqaftech.com/og-image.jpg'],
+    creator: '@GlobalWaqafTech',
   },
   robots: {
     index: true,
@@ -63,36 +63,54 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#059669" />
 
-        {/* Structured Data for MadinaGPT - Islamic AI Platform */}
+        {/* Structured Data for Global Waqaf Tech */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "MadinaGPT",
-              "description": "MadinaGPT - Islamic AI platform supporting Masjid Madina. Faith, Knowledge, and Guidance for the Muslim community with authentic Islamic content.",
-              "url": "https://madinagpt.com",
+              "name": "Global Waqaf Tech",
+              "description": "Multi-tenant SaaS platform empowering masajid and Islamic organizations with 7 AI-powered modules. 20% of proceeds support selected masajid worldwide.",
+              "url": "https://globalwaqaftech.com",
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
-                "price": "4.99",
-                "priceCurrency": "USD",
-                "priceValidUntil": "2026-12-31",
-                "description": "Monthly unlimited subscription - 50% proceeds support Masjid Madina"
-              },
+              "offers": [
+                {
+                  "@type": "Offer",
+                  "name": "Basic Plan",
+                  "price": "0",
+                  "priceCurrency": "USD",
+                  "description": "Free plan with limited features"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Pro Plan",
+                  "price": "29",
+                  "priceCurrency": "USD",
+                  "priceValidUntil": "2026-12-31",
+                  "description": "Pro plan with advanced features - 20% supports selected masajid"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Enterprise Plan",
+                  "price": "99",
+                  "priceCurrency": "USD",
+                  "priceValidUntil": "2026-12-31",
+                  "description": "Enterprise plan with unlimited features - 20% supports selected masajid"
+                }
+              ],
               "creator": {
                 "@type": "Organization",
-                "name": "MadinaGPT",
-                "url": "https://madinagpt.com",
+                "name": "Global Waqaf Tech",
+                "url": "https://globalwaqaftech.com",
                 "sameAs": [
-                  "https://twitter.com/MadinaGPT"
+                  "https://twitter.com/GlobalWaqafTech"
                 ]
               },
               "audience": {
                 "@type": "Audience",
-                "audienceType": "Muslim Community",
+                "audienceType": "Islamic Organizations, Masajid, Schools, Businesses",
                 "geographicArea": "Worldwide"
               }
             })
