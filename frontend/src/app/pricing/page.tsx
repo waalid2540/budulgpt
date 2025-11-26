@@ -13,7 +13,7 @@ export default function PricingPage() {
       icon: <Sparkles className="w-8 h-8" />,
       gradient: 'from-slate-500 to-slate-600',
       features: [
-        'Du'a Studio: 10/month',
+        'Dua Studio: 10/month',
         'Story Studio: 5/month',
         'Grant Finder: View only',
         'Umrah Finder: 5 searches/month',
@@ -33,7 +33,7 @@ export default function PricingPage() {
       icon: <Building className="w-8 h-8" />,
       gradient: 'from-madina-green-500 to-madina-green-600',
       features: [
-        'Du'a Studio: 100/month',
+        'Dua Studio: 100/month',
         'Story Studio: 50/month',
         'Grant Finder: Unlimited + AI helpers',
         'Marketplace: 1 listing',
