@@ -80,11 +80,11 @@ export default function HomePage() {
 
             {/* Main Headline */}
             <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 leading-tight">
-              The Operating System for
-              <br />
               <span className="bg-gradient-to-r from-madina-green-600 via-madina-green-500 to-madina-gold-500 bg-clip-text text-transparent">
-                Islamic Organizations
+                Global Waqaf Tech
               </span>
+              <br />
+              Digital Waqf Network for Islamic Organizations
             </h1>
 
             {/* Subheadline */}
